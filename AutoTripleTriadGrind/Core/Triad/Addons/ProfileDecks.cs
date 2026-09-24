@@ -67,6 +67,12 @@ internal static unsafe class ProfileDecks
             }
         }
 
+        var deck = module->GetDeck(slot);
+        if (deck is not null && deck->Cards.SequenceEqual(cards) && deck->NameString == DeckName)
+        {
+            return true;
+        }
+
         for (var index = 0; index < cards.Length; index++)
         {
             module->SetDeckCard(slot, index, cards[index]);

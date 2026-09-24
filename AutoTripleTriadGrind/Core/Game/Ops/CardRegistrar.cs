@@ -9,9 +9,6 @@ internal static unsafe class CardRegistrar
 {
     private static readonly InventoryType[] bags = [InventoryType.Inventory1, InventoryType.Inventory2, InventoryType.Inventory3, InventoryType.Inventory4];
 
-    // MGP is kept as a currency item with this id.
-    private const uint MgpItemId = 29;
-
     public static int FreeBagSlots()
     {
         var manager = InventoryManager.Instance();
@@ -21,11 +18,11 @@ internal static unsafe class CardRegistrar
     public static int Mgp()
     {
         var manager = InventoryManager.Instance();
-        return manager is null ? 0 : manager->GetInventoryItemCount(MgpItemId);
+        return manager is null ? 0 : (int)manager->GetGoldSaucerCoin();
     }
 
     // The first card item in the bags whose card is not registered yet, or 0.
-    public static uint FindUnregisteredCardItem()
+    public static uint FindUnregisteredCardItem(IReadOnlySet<uint> skipped)
     {
         var manager = InventoryManager.Instance();
         if (manager is null)
@@ -50,7 +47,7 @@ internal static unsafe class CardRegistrar
                     continue;
                 }
 
-                if (byItem.TryGetValue(item->ItemId, out var cardId) && !TriadOwnership.IsOwned(cardId))
+                if (byItem.TryGetValue(item->ItemId, out var cardId) && !TriadOwnership.IsOwned(cardId) && !skipped.Contains(item->ItemId))
                 {
                     return item->ItemId;
                 }

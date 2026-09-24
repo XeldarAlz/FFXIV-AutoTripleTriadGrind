@@ -31,6 +31,7 @@ internal sealed class TriadNpcRun(ushort npcIndex, Func<TriadNpcRun, bool> goalM
     public int Matches;
     public int LossStreak;
     public int InteractFailures;
+    public int FailedSeries;
     public ushort DeckRuleMask = ushort.MaxValue;
     public bool DeckReady;
     // Zero plays on until the goal is met; Collect sets it from the per-NPC match limit.
@@ -49,6 +50,10 @@ public abstract partial class AutoCommon
     private const int MaxInteractFailures = 6;
     private const int ChallengeOpenTimeoutMs = 15_000;
     private const int DialogSettleTimeoutMs = 8_000;
+    private const int MaxFailedSeries = 3;
+
+    // Card items that would not register this run, so each is tried once rather than before every match.
+    private readonly HashSet<uint> unregistrableItems = [];
 
     internal async Task<NpcRunResult> PlayNpc(TriadNpcRun run, AutoTriadSession session, TriadProgress progress)
     {
@@ -107,11 +112,18 @@ public abstract partial class AutoCommon
             }
 
             run.InteractFailures = 0;
+            var matchesBefore = run.Matches;
             var leave = await PlayMatchSeries(configuration, run, session, progress);
             await SettleDialog();
             if (leave is { } stop)
             {
                 return stop;
+            }
+
+            run.FailedSeries = run.Matches == matchesBefore ? run.FailedSeries + 1 : 0;
+            if (run.FailedSeries >= MaxFailedSeries)
+            {
+                return new NpcRunResult(NpcRunEnd.Skipped, SkipReason.InteractFailed);
             }
         }
 
@@ -189,7 +201,7 @@ public abstract partial class AutoCommon
     // Talks to the NPC and walks the dialogue until the challenge window opens.
     private async Task<bool> OpenChallenge(TriadNpcRun run)
     {
-        if (TriadAddons.IsVisible(TriadAddons.Request) || TriadAddons.IsVisible(TriadAddons.DeckSelect))
+        if (TriadAddons.AnyMatchWindowVisible())
         {
             return true;
         }
@@ -247,7 +259,7 @@ public abstract partial class AutoCommon
     {
         for (var attempt = 0; attempt < 20 && !CancelToken.IsCancellationRequested; attempt++)
         {
-            var itemId = CardRegistrar.FindUnregisteredCardItem();
+            var itemId = CardRegistrar.FindUnregisteredCardItem(unregistrableItems);
             if (itemId == 0 || !TriadData.Set.CardIdByItemId.TryGetValue(itemId, out var cardId))
             {
                 return;
@@ -258,18 +270,25 @@ public abstract partial class AutoCommon
                 return;
             }
 
-            Diag($"Registering {TriadData.Set.CardName(cardId)} (item {itemId}).");
+            var cardName = TriadData.Set.CardName(cardId);
+            Diag($"Registering {cardName} (item {itemId}).");
             CardRegistrar.Use(itemId);
             var registered = await WaitUntilTimed(() =>
             {
-                DialogDriver.Confirm();
+                // Only a prompt about this card is confirmed; anything else is left for the player.
+                if (NpcInteraction.SelectYesnoOpen() && NpcInteraction.SelectYesnoText().Contains(cardName, StringComparison.OrdinalIgnoreCase))
+                {
+                    DialogDriver.Confirm();
+                }
+
                 TriadOwnership.Refresh(force: true);
                 return TriadOwnership.IsOwned(cardId);
             }, 8_000, "register-card");
             if (!registered)
             {
-                Warn($"{TriadData.Set.CardName(cardId)} did not register; leaving it in your bags.");
-                return;
+                Warn($"{cardName} did not register; leaving it in your bags.");
+                unregistrableItems.Add(itemId);
+                continue;
             }
 
             session.RecordCardRegistered();

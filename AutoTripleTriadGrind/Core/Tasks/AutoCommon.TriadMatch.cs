@@ -25,21 +25,27 @@ public abstract partial class AutoCommon
     {
         while (!CancelToken.IsCancellationRequested)
         {
-            if (!await AcceptChallenge(configuration, run, progress))
+            // A run resumed from a pause can find the match already on the board or on its result screen.
+            var resumeAtResult = TriadAddons.IsVisible(TriadAddons.Result);
+            var resumeOnBoard = !resumeAtResult && TriadAddons.IsVisible(TriadAddons.Board);
+            if (!resumeAtResult && !resumeOnBoard)
             {
-                await LeaveMatchWindows();
-                return null;
-            }
+                if (!await AcceptChallenge(configuration, run, progress))
+                {
+                    await LeaveMatchWindows();
+                    return null;
+                }
 
-            if (!await SelectDeck(configuration))
-            {
-                Warn($"Deck selection for {run.Name} did not go through.");
-                await LeaveMatchWindows();
-                return new NpcRunResult(NpcRunEnd.Skipped, SkipReason.InteractFailed);
+                if (!await SelectDeck(configuration))
+                {
+                    Warn($"Deck selection for {run.Name} did not go through.");
+                    await LeaveMatchWindows();
+                    return new NpcRunResult(NpcRunEnd.Skipped, SkipReason.InteractFailed);
+                }
             }
 
             progress.SetPhase(TriadPhase.Playing);
-            if (!await PlayBoard(run))
+            if (!resumeAtResult && !await PlayBoard(run))
             {
                 await LeaveMatchWindows();
                 return null;
