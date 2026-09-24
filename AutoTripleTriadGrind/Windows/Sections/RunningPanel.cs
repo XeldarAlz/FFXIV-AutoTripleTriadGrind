@@ -78,7 +78,7 @@ internal static class RunningPanel
     private static void DrawHeroCard(AutoTriadController controller, RunWorkload.Workload workload, Vector4 accent, Vector4 accentSoft, string label)
     {
         var scale = ImGuiHelpers.GlobalScale;
-        var size = new Vector2(ImGui.GetContentRegionAvail().X, Layout.HeroCardHeight * scale);
+        var size = new Vector2(ImGui.GetContentRegionAvail().X, HeroHeight(controller));
         var origin = ImGui.GetCursorScreenPos();
         var end = origin + size;
         var drawList = ImGui.GetWindowDrawList();
@@ -151,6 +151,31 @@ internal static class RunningPanel
         }
 
         ImGui.Dummy(size);
+    }
+
+    // Grows past the standard hero height when the NPC's card strip needs the room, so the cards stay inside the card.
+    private static float HeroHeight(AutoTriadController controller)
+    {
+        var scale = ImGuiHelpers.GlobalScale;
+        var standard = Layout.HeroCardHeight * scale;
+        var npcIndex = controller.Progress.CurrentNpcIndex;
+        if (npcIndex == TriadData.NoNpc || npcIndex >= TriadData.Set.NpcCount)
+        {
+            return standard;
+        }
+
+        float captionHeight;
+        using (Fonts.PushCaption())
+        {
+            captionHeight = ImGui.GetTextLineHeight();
+        }
+
+        var chipHeight = captionHeight + 6f * scale;
+        var content = 16f * scale + chipHeight + 10f * scale
+            + ImGui.GetTextLineHeight() + 3f * scale + captionHeight
+            + 10f * scale + 8f * scale + 8f * scale
+            + HeroCardSize * scale + 16f * scale;
+        return MathF.Max(standard, content);
     }
 
     private static void DrawCardStrip(ImDrawListPtr drawList, ReadOnlySpan<ushort> cards, float x, float y, float size, float rightX)
