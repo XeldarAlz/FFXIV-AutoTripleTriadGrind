@@ -5,7 +5,7 @@ namespace AutoTripleTriadGrind.Windows.Sections.Config;
 
 internal static class DeckSettings
 {
-    private const int DeckSlots = 10;
+    private const int DeckSlots = Core.Triad.Addons.ProfileDecks.SlotCount;
 
     private static readonly SettingsControls.Choices.Choice[] sources =
     [

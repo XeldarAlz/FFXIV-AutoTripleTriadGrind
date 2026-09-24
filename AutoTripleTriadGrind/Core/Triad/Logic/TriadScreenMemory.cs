@@ -223,7 +223,7 @@ public sealed partial class TriadScreenMemory
             var found = false;
             for (var screenIndex = 0; screenIndex < screen.Count; screenIndex++)
             {
-                if (screen[screenIndex].Id == current[index].Id)
+                if (screen[screenIndex].Id == current[index].Id && ResolvedId(screen[screenIndex]) == ResolvedId(current[index]))
                 {
                     found = true;
                     break;
@@ -238,6 +238,9 @@ public sealed partial class TriadScreenMemory
 
         return true;
     }
+
+    // Roulette only shows the rule it rolled once the match starts, and that has to reach the solver.
+    private static Data.TriadRuleId ResolvedId(TriadRule rule) => rule is TriadRuleRoulette roulette ? roulette.Resolved?.Id ?? Data.TriadRuleId.None : Data.TriadRuleId.None;
 
     private static bool HandMatches(TriadDeckInstanceScreen deck, ushort[] hand)
     {

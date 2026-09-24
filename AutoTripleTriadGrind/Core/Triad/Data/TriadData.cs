@@ -22,6 +22,7 @@ internal static class TriadData
         if (TriadDataLoader.TryLoad(out var loaded, out var failure))
         {
             current = loaded;
+            Logic.TriadCards.Use(loaded.Cards);
             return;
         }
 
