@@ -1,3 +1,4 @@
+using AutoTripleTriadGrind.Core.Game.Ops;
 using AutoTripleTriadGrind.Core.Planning;
 using AutoTripleTriadGrind.Core.Triad.Addons;
 using AutoTripleTriadGrind.Core.Triad.Data;
@@ -100,7 +101,12 @@ public abstract partial class AutoCommon
                 return true;
             }
 
-            TriadMatchOps.ClickChallenge();
+            // A Triple Triad prompt, such as the fee confirmation, can sit between Challenge and the deck window.
+            if (TriadDialog.Advance() != TriadDialog.Step.Handled)
+            {
+                TriadMatchOps.ClickChallenge();
+            }
+
             await NextFrame(RetryFrames);
         }
 

@@ -259,7 +259,7 @@
   "settings.general.behavior": "Behavior",
   "settings.general.autoPause": "Auto-pause in content",
   "settings.general.autoPauseHelp": "Pause the run while you are inside a duty, trial, raid, or any other instanced content, then resume it once you are back outside. Your plan and session stats are kept.",
-  "plugin.commandHelp": "Toggle the Auto Triple Triad Grind window. /attg config | stats | deps | about | pause (pause or resume the run) | npcs (write the Triple Triad NPC table to the plugin log).",
+  "plugin.commandHelp": "Toggle the Auto Triple Triad Grind window. /attg config | stats | deps | about | pause (pause or resume the run) | npcs (write the Triple Triad NPC table to the plugin log) | board | request (print what the plugin reads off the open match windows).",
   "plugin.commandHelpAlias": "Alias for /attg.",
   "collection.title": "NPC cards",
   "collection.loading": "Reading the Triple Triad tables…",

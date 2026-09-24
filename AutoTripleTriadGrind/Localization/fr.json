@@ -259,7 +259,7 @@
   "settings.general.behavior": "Comportement",
   "settings.general.autoPause": "Pause automatique en instance",
   "settings.general.autoPauseHelp": "Met la session en pause pendant un donjon, une épreuve, un raid ou tout autre contenu instancié, puis la reprend une fois dehors. Votre plan et vos statistiques sont conservés.",
-  "plugin.commandHelp": "Ouvre ou ferme la fenêtre Auto Triple Triad Grind. /attg config | stats | deps | about | pause (mettre en pause ou reprendre la session) | npcs (écrire la table des PNJ de Triple Triade dans le journal du plugin).",
+  "plugin.commandHelp": "Ouvre ou ferme la fenêtre Auto Triple Triad Grind. /attg config | stats | deps | about | pause (mettre en pause ou reprendre la session) | npcs (écrire la table des PNJ de Triple Triade dans le journal du plugin) | board | request (affiche ce que le plugin lit dans les fenêtres de partie ouvertes).",
   "plugin.commandHelpAlias": "Alias de /attg.",
   "collection.title": "Cartes des PNJ",
   "collection.loading": "Lecture des tables de Triple Triade…",

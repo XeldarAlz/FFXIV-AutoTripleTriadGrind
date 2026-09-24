@@ -259,7 +259,7 @@
   "settings.general.behavior": "Davranış",
   "settings.general.autoPause": "İçerikte otomatik duraklat",
   "settings.general.autoPauseHelp": "Bir zindan, sınav, baskın ya da başka bir örneklenmiş içerikteyken çalışmayı duraklatır, dışarı çıkınca sürdürür. Planınız ve oturum istatistikleriniz korunur.",
-  "plugin.commandHelp": "Auto Triple Triad Grind penceresini açar/kapatır. /attg config | stats | deps | about | pause (oturumu duraklat ya da sürdür) | npcs (Triple Triad NPC tablosunu eklenti günlüğüne yaz).",
+  "plugin.commandHelp": "Auto Triple Triad Grind penceresini açar/kapatır. /attg config | stats | deps | about | pause (oturumu duraklat ya da sürdür) | npcs (Triple Triad NPC tablosunu eklenti günlüğüne yaz) | board | request (eklentinin açık maç pencerelerinden okuduklarını yazar).",
   "plugin.commandHelpAlias": "/attg için kısayol.",
   "collection.title": "NPC kartları",
   "collection.loading": "Triple Triad tabloları okunuyor…",

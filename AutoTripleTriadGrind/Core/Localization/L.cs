@@ -312,7 +312,7 @@ internal static partial class L
 
     internal static class Plugin
     {
-        public static readonly LocString CommandHelp = new("plugin.commandHelp", "Toggle the Auto Triple Triad Grind window. /attg config | stats | deps | about | pause (pause or resume the run) | npcs (write the Triple Triad NPC table to the plugin log).");
+        public static readonly LocString CommandHelp = new("plugin.commandHelp", "Toggle the Auto Triple Triad Grind window. /attg config | stats | deps | about | pause (pause or resume the run) | npcs (write the Triple Triad NPC table to the plugin log) | board | request (print what the plugin reads off the open match windows).");
         public static readonly LocString CommandHelpAlias = new("plugin.commandHelpAlias", "Alias for /attg.");
     }
 }

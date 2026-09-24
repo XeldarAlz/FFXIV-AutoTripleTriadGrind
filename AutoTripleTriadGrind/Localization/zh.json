@@ -259,7 +259,7 @@
   "settings.general.behavior": "行为",
   "settings.general.autoPause": "副本中自动暂停",
   "settings.general.autoPauseHelp": "在副本、讨伐战、团队副本或其他实例化内容中时暂停运行，回到外面后继续。你的计划和本次统计会保留。",
-  "plugin.commandHelp": "打开或关闭 Auto Triple Triad Grind 窗口。/attg config | stats | deps | about | pause（暂停或继续运行）| npcs（将九宫幻卡NPC表写入插件日志）。",
+  "plugin.commandHelp": "打开或关闭 Auto Triple Triad Grind 窗口。/attg config | stats | deps | about | pause（暂停或继续运行）| npcs（将九宫幻卡NPC表写入插件日志） | board | request（显示插件从已打开的对局窗口读取到的内容）。",
   "plugin.commandHelpAlias": "/attg 的别名。",
   "collection.title": "NPC幻卡",
   "collection.loading": "正在读取九宫幻卡数据表…",

@@ -259,7 +259,7 @@
   "settings.general.behavior": "Comportamiento",
   "settings.general.autoPause": "Pausa automática en contenido",
   "settings.general.autoPauseHelp": "Pausa la sesión mientras estás en una mazmorra, prueba, incursión u otro contenido instanciado, y la reanuda al volver fuera. Tu plan y tus estadísticas se conservan.",
-  "plugin.commandHelp": "Abre o cierra la ventana de Auto Triple Triad Grind. /attg config | stats | deps | about | pause (pausar o reanudar la sesión) | npcs (escribir la tabla de PNJ de Triple Triad en el registro del plugin).",
+  "plugin.commandHelp": "Abre o cierra la ventana de Auto Triple Triad Grind. /attg config | stats | deps | about | pause (pausar o reanudar la sesión) | npcs (escribir la tabla de PNJ de Triple Triad en el registro del plugin) | board | request (muestra lo que el plugin lee de las ventanas de partida abiertas).",
   "plugin.commandHelpAlias": "Alias de /attg.",
   "collection.title": "Cartas de PNJ",
   "collection.loading": "Leyendo las tablas de Triple Triad…",

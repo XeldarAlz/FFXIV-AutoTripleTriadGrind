@@ -259,7 +259,7 @@
   "settings.general.behavior": "Verhalten",
   "settings.general.autoPause": "Im Inhalt automatisch pausieren",
   "settings.general.autoPauseHelp": "Pausiert den Lauf, solange du in einem Dungeon, einer Prüfung, einem Raid oder anderem instanzierten Inhalt bist, und setzt ihn fort, sobald du wieder draußen bist. Dein Plan und deine Sitzungsstatistiken bleiben erhalten.",
-  "plugin.commandHelp": "Öffnet oder schließt das Auto-Triple-Triad-Grind-Fenster. /attg config | stats | deps | about | pause (Durchlauf pausieren oder fortsetzen) | npcs (Triple-Triad-NPC-Tabelle ins Plugin-Log schreiben).",
+  "plugin.commandHelp": "Öffnet oder schließt das Auto-Triple-Triad-Grind-Fenster. /attg config | stats | deps | about | pause (Durchlauf pausieren oder fortsetzen) | npcs (Triple-Triad-NPC-Tabelle ins Plugin-Log schreiben) | board | request (gibt aus, was das Plugin in den offenen Spielfenstern liest).",
   "plugin.commandHelpAlias": "Alias für /attg.",
   "collection.title": "NPC-Karten",
   "collection.loading": "Triple-Triad-Tabellen werden gelesen…",

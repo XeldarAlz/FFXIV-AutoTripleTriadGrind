@@ -62,6 +62,8 @@ The plugin needs a movement helper to be installed and loaded. Open `/attg deps`
 | `/attg about` | Open the About page |
 | `/attg pause` | Pause or resume the current run |
 | `/attg npcs` | Write the Triple Triad NPC table to the plugin log (debug helper) |
+| `/attg board` | Print what the plugin reads off an open match board (debug helper) |
+| `/attg request` | Print the regional rules read off an open challenge window (debug helper) |
 | `/attg goto <territory> <x> <y> <z>` | Travel to a point, `/attg goto stop` cancels (debug helper) |
 
 ## Languages

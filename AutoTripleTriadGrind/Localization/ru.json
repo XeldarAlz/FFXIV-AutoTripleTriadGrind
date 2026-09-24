@@ -259,7 +259,7 @@
   "settings.general.behavior": "Поведение",
   "settings.general.autoPause": "Автопауза в контенте",
   "settings.general.autoPauseHelp": "Приостанавливает запуск, пока вы в подземелье, испытании, рейде или другом инстансе, и продолжает его, когда вы вернётесь. План и статистика сессии сохраняются.",
-  "plugin.commandHelp": "Открыть или закрыть окно Auto Triple Triad Grind. /attg config | stats | deps | about | pause (пауза или продолжение сессии) | npcs (записать таблицу NPC Triple Triad в лог плагина).",
+  "plugin.commandHelp": "Открыть или закрыть окно Auto Triple Triad Grind. /attg config | stats | deps | about | pause (пауза или продолжение сессии) | npcs (записать таблицу NPC Triple Triad в лог плагина) | board | request (выводит то, что плагин читает из открытых окон партии).",
   "plugin.commandHelpAlias": "Псевдоним для /attg.",
   "collection.title": "Карты NPC",
   "collection.loading": "Чтение таблиц Triple Triad…",

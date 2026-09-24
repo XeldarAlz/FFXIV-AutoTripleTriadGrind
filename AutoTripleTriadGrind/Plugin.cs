@@ -152,6 +152,14 @@ public sealed class Plugin : IDalamudPlugin
         {
             TriadNpcDumper.Dump();
         }
+        else if (trimmed.Equals("board", StringComparison.OrdinalIgnoreCase))
+        {
+            TriadBoardDumper.DumpBoard();
+        }
+        else if (trimmed.Equals("request", StringComparison.OrdinalIgnoreCase))
+        {
+            TriadBoardDumper.DumpRequest();
+        }
         else if (IsGotoCommand(trimmed))
         {
             AutoGoto.HandleCommand(trimmed[GotoSubcommand.Length..].Trim(), Controller.Running);
