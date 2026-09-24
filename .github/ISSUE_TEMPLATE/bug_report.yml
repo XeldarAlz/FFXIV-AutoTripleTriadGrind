@@ -1,0 +1,110 @@
+name: Bug report
+description: Something's broken or behaving unexpectedly.
+title: "[Bug] "
+labels: ["bug"]
+assignees: ["XeldarAlz"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Please fill out as much as you can; it makes a huge difference.
+
+        If you're not sure whether it's a bug or expected behavior, prefer the [Q&A discussions](https://github.com/XeldarAlz/FFXIV-AutoTripleTriadGrind/discussions/new?category=q-a); triage is faster there.
+
+        For security issues, please use [private vulnerability reporting](https://github.com/XeldarAlz/FFXIV-AutoTripleTriadGrind/security/advisories/new) instead.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you see? What did you expect to see instead?
+      placeholder: "The plugin reached Memeroon but never picked Triple Triad from the menu..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps to trigger the bug. If it's intermittent, say so.
+      placeholder: |
+        1. Open `/attg`
+        2. Pick the missing cards of one NPC
+        3. Press Start
+        4. ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: Shown in `/xlplugins` next to "Auto Triple Triad Grind".
+      options:
+        - 0.1.0.0
+        - Older / not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode
+      description: Which mode was running?
+      options:
+        - Collect
+        - Farm
+        - Not running (window or settings only)
+    validations:
+      required: true
+
+  - type: input
+    id: npcs-affected
+    attributes:
+      label: NPC(s) or card(s) affected
+      description: Which NPC or card was involved? The NPC's rules help too.
+      placeholder: "Memeroon in Central Thanalan, the Amalj'aa card, an NPC playing Sudden Death, ..."
+
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Where in the run did it fail?
+      description: The plugin's flow runs plan the route -> travel -> challenge the NPC -> pick a deck -> play -> rematch or finish -> register cards -> next NPC.
+      options:
+        - Planning (wrong NPC picked, card listed as unavailable)
+        - Teleport (didn't move / wrong destination)
+        - Movement (stuck, can't reach the NPC)
+        - Challenge (talked to the NPC but never started a match)
+        - Deck (wrong deck, deck selection stuck)
+        - Playing (stuck mid-match, clearly bad moves)
+        - Rematch / result (didn't rematch, didn't leave when done)
+        - Card registration (won card not registered, bags filled up)
+        - Selection / UI (issue before pressing Start)
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Attachments
+      description: |
+        **If you can provide any of these, it turns guesswork into a fix.**
+
+        - **Dalamud log**: open `/xllog`, click the *Open log folder* button at the bottom-right, attach `dalamud.log`. Filter by `[AutoTripleTriadGrind]` if you want to trim it down.
+        - **Screenshots / short clip** if the issue is visual (selection state, wrong tooltip, frozen card, etc.)
+        - **Other plugins active** that touch movement, teleport, dialogs, or input, which helps rule out conflicts.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Inline log excerpt (optional)
+      description: |
+        Short snippets (chat-log tail, Dalamud error text) belong here. For full log files, use **Attachments** above; don't paste them inline.
+      render: text
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: How many cards you own, whether the NPC uses regional rules, hunches, anything that helps the bug land.
