@@ -29,7 +29,7 @@ internal sealed partial class AutoTriadController
     public TriadRunMode Mode => session?.Mode ?? Plugin.Instance.Configuration.RunMode;
 
     private static void Diag(string message)
-        => ECommons.DalamudServices.Svc.Log.Info($"{AttgConstants.LogPrefix} {message}");
+        => RunLog.Info(message);
 
     public void Start(TriadRunMode mode)
     {

@@ -57,7 +57,7 @@ internal static class TriadBoardDumper
         var line = builder.ToString();
         builder.Clear();
         Svc.Chat.Print($"{AttgConstants.LogPrefix} {line}");
-        Svc.Log.Info($"{AttgConstants.LogPrefix} {line}");
+        RunLog.Info(line);
     }
 
     private static string RuleList(TriadScreenState screen)

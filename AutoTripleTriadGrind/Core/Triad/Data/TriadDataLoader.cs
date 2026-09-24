@@ -28,7 +28,7 @@ internal static class TriadDataLoader
         catch (Exception exception)
         {
             failure = $"Reading the Triple Triad game data failed: {exception.Message}";
-            Svc.Log.Error(exception, $"{AttgConstants.LogPrefix} {failure}");
+            RunLog.Error(exception, failure);
             return false;
         }
     }
@@ -96,7 +96,7 @@ internal static class TriadDataLoader
             NpcIndexByTriadRowId = npcIndexByRow,
             CardIdByItemId = cardIdByItemId,
         };
-        Svc.Log.Info($"{AttgConstants.LogPrefix} Loaded Triple Triad data: {loaded.CardCount} cards, {npcArray.Length} NPCs, {rewardArray.Length} NPC rewards.");
+        RunLog.Info($"Loaded Triple Triad data: {loaded.CardCount} cards, {npcArray.Length} NPCs, {rewardArray.Length} NPC rewards.");
         failure = string.Empty;
         return true;
     }
@@ -191,7 +191,7 @@ internal static class TriadDataLoader
 
             if (!levels.TryGetValue(eNpcId, out var level))
             {
-                Svc.Log.Debug($"{AttgConstants.LogPrefix} Triad NPC row {row.RowId} (ENpc {eNpcId}) has no map position; left out.");
+                RunLog.Debug($"Triad NPC row {row.RowId} (ENpc {eNpcId}) has no map position; left out.");
                 continue;
             }
 

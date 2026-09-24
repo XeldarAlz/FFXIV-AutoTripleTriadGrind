@@ -37,7 +37,7 @@ internal static class TriadNpcDumper
             }
 
             builder.Append(']');
-            Svc.Log.Info($"{AttgConstants.LogPrefix} {builder}");
+            RunLog.Info(builder.ToString());
         }
 
         Svc.Chat.Print($"{AttgConstants.LogPrefix} Wrote {set.NpcCount} Triple Triad NPCs to the plugin log; you own {TriadOwnership.OwnedCount} of {set.CardCount} cards.");

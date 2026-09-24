@@ -1,6 +1,5 @@
 using ECommons;
 using ECommons.Automation;
-using ECommons.DalamudServices;
 using ECommons.Throttlers;
 using ECommons.UIHelpers.AddonMasterImplementations;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -95,7 +94,7 @@ internal static unsafe class TriadDialog
 
         if (EzThrottler.Throttle(MenuThrottleKey, ClickThrottleMs))
         {
-            Svc.Log.Info($"{AttgConstants.LogPrefix} Choosing menu entry {index} ({EntryText(menu, isIconMenu, index)}).");
+            RunLog.Info($"Choosing menu entry {index} ({EntryText(menu, isIconMenu, index)}).");
             Callback.Fire(menu, true, index);
         }
 

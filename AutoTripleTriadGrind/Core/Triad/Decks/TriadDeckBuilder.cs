@@ -1,7 +1,6 @@
 using AutoTripleTriadGrind.Core.Triad.Data;
 using AutoTripleTriadGrind.Core.Triad.Logic;
 using AutoTripleTriadGrind.Core.Triad.Logic.Rules;
-using ECommons.DalamudServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -80,7 +79,7 @@ internal static class TriadDeckBuilder
         var job = optimizer;
         var token = running.Token;
         build = Task.Run(() => job.Run(threads, token), CancellationToken.None);
-        Svc.Log.Info($"{AttgConstants.LogPrefix} Building a deck for {TriadData.Set.NpcNames[npcIndex]} from {owned.Length} cards ({job.PossibleDecks} candidates).");
+        RunLog.Info($"Building a deck for {TriadData.Set.NpcNames[npcIndex]} from {owned.Length} cards ({job.PossibleDecks} candidates).");
     }
 
     // Stores the finished deck in the cache and returns it; null while the build is still running.
@@ -94,7 +93,7 @@ internal static class TriadDeckBuilder
         build = null;
         if (finished.IsFaulted || finished.IsCanceled)
         {
-            Svc.Log.Warning($"{AttgConstants.LogPrefix} The deck build failed: {finished.Exception?.GetBaseException().Message}");
+            RunLog.Warning($"The deck build failed: {finished.Exception?.GetBaseException().Message}");
             return null;
         }
 
@@ -108,7 +107,7 @@ internal static class TriadDeckBuilder
         };
         configuration.OptimizedDecks[buildingFor] = cached;
         configuration.SaveDebounced();
-        Svc.Log.Info($"{AttgConstants.LogPrefix} Deck built: [{string.Join(", ", result.Cards)}], {result.WinChance:P0} estimated, {result.TestedDecks}/{result.PossibleDecks} decks tried.");
+        RunLog.Info($"Deck built: [{string.Join(", ", result.Cards)}], {result.WinChance:P0} estimated, {result.TestedDecks}/{result.PossibleDecks} decks tried.");
         return cached;
     }
 

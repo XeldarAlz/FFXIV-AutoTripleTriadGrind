@@ -1,3 +1,4 @@
+using AutoTripleTriadGrind.Core;
 using AutoTripleTriadGrind.Core.External;
 using AutoTripleTriadGrind.Core.Localization;
 using AutoTripleTriadGrind.Windows.Components;
@@ -21,6 +22,8 @@ internal static class NavRail
         new(AppWindow.Page.Settings, FontAwesomeIcon.SlidersH,   "##attg_nav_settings", L.Shell.NavSettings),
         new(AppWindow.Page.History,  FontAwesomeIcon.ChartLine,  "##attg_nav_history",  L.Shell.NavHistory),
         new(AppWindow.Page.Plugins,  FontAwesomeIcon.Plug,       "##attg_nav_plugins",  L.Shell.NavPlugins),
+        new(AppWindow.Page.Log,      FontAwesomeIcon.Terminal,   "##attg_nav_log",      L.Shell.NavLog),
+        new(AppWindow.Page.Changelog, FontAwesomeIcon.Newspaper, "##attg_nav_changelog", L.Shell.NavChangelog),
         new(AppWindow.Page.About,    FontAwesomeIcon.InfoCircle, "##attg_nav_about",    L.Shell.NavAbout),
     ];
 
@@ -51,6 +54,7 @@ internal static class NavRail
 
         var missingPlugins = !ExternalPlugins.AllRequiredInstalled();
         var running = plugin.Controller.Running;
+        var unseenChangelog = plugin.Configuration.HasUnseenChangelog;
         AppWindow.Page? clicked = null;
 
         for (var index = 0; index < entries.Length; index++)
@@ -71,7 +75,7 @@ internal static class NavRail
             var color = selected ? Styling.TextStrong : Vector4.Lerp(Styling.TextDim, Styling.TextSecondary, hover);
             TextDraw.IconCentered(entry.Icon, center, color);
 
-            DrawBadge(dl, entry.Page, center, button, missingPlugins, running);
+            DrawBadge(dl, entry.Page, current, center, button, missingPlugins, running, unseenChangelog);
 
             if (hit.Hovered) Tooltip.Show(Loc.T(entry.Label));
             if (hit.Clicked) clicked = entry.Page;
@@ -82,7 +86,7 @@ internal static class NavRail
         return clicked;
     }
 
-    private static void DrawBadge(ImDrawListPtr dl, AppWindow.Page page, Vector2 center, float button, bool missingPlugins, bool running)
+    private static void DrawBadge(ImDrawListPtr dl, AppWindow.Page page, AppWindow.Page current, Vector2 center, float button, bool missingPlugins, bool running, bool unseenChangelog)
     {
         var scale = ImGuiHelpers.GlobalScale;
         var badgeCenter = center + new Vector2(button * 0.30f, -button * 0.30f);
@@ -97,6 +101,16 @@ internal static class NavRail
         {
             dl.AddCircleFilled(badgeCenter, radius + 1.5f * scale, Paint.Col(Styling.WindowBg));
             dl.AddCircleFilled(badgeCenter, radius, Paint.Col(Styling.PulseColor(Styling.AccentBlue, Styling.AccentBlueSoft, Styling.PulseMedium)));
+        }
+        else if (page == AppWindow.Page.Changelog && current != AppWindow.Page.Changelog && unseenChangelog)
+        {
+            dl.AddCircleFilled(badgeCenter, radius + 1.5f * scale, Paint.Col(Styling.WindowBg));
+            dl.AddCircleFilled(badgeCenter, radius, Paint.Col(Styling.PulseColor(Styling.AccentGlow, Styling.AccentGlowSoft, Styling.PulseMedium)));
+        }
+        else if (page == AppWindow.Page.Log && current != AppWindow.Page.Log && RunLog.Unseen is { } unseen)
+        {
+            dl.AddCircleFilled(badgeCenter, radius + 1.5f * scale, Paint.Col(Styling.WindowBg));
+            dl.AddCircleFilled(badgeCenter, radius, Paint.Col(unseen == RunLogLevel.Error ? Styling.AccentRose : Styling.AccentAmber));
         }
     }
 }

@@ -59,6 +59,8 @@ The plugin needs a movement helper to be installed and loaded. Open `/attg deps`
 | `/attg config` | Open the Settings page |
 | `/attg stats` | Open the History page |
 | `/attg deps` | Open the Plugins page |
+| `/attg log` | Open the Console page |
+| `/attg changelog` | Open the Changelog page |
 | `/attg about` | Open the About page |
 | `/attg pause` | Pause or resume the current run |
 | `/attg npcs` | Write the Triple Triad NPC table to the plugin log (debug helper) |

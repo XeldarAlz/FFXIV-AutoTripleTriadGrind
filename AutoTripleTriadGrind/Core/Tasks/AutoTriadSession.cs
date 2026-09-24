@@ -88,6 +88,8 @@ public sealed class AutoTriadSession(TriadRunMode mode)
         }
 
         EndedWithFault = true;
+        // clib's task runner writes the same exception to dalamud.log when the task unwinds.
+        RunLog.Record(RunLogLevel.Error, exception, "The triad task ended with an unexpected error");
     }
 
     internal void ClearFault() => EndedWithFault = false;

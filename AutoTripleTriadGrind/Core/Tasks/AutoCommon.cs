@@ -2,6 +2,7 @@ using AutoTripleTriadGrind.Core.Ipc;
 using clib.TaskSystem;
 using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace AutoTripleTriadGrind.Core.Tasks;
@@ -12,9 +13,9 @@ public abstract partial class AutoCommon : TaskBase
     private const int WaitPollFrames = 30;
     private const int NavmeshPollFrames = 120;
 
-    protected void Diag(string message) => Svc.Log.Info($"{AttgConstants.LogPrefix} {message}");
+    protected void Diag(string message, [CallerFilePath] string callerFile = "") => RunLog.Info(message, callerFile);
 
-    protected void Warn(string message) => Svc.Log.Warning($"{AttgConstants.LogPrefix} {message}");
+    protected void Warn(string message, [CallerFilePath] string callerFile = "") => RunLog.Warning(message, callerFile);
 
     protected new async Task DelayMs(int milliseconds)
     {

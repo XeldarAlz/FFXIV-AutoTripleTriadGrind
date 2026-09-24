@@ -1,3 +1,4 @@
+using AutoTripleTriadGrind.Core.Changelog;
 using Dalamud.Configuration;
 using ECommons.Throttlers;
 using Newtonsoft.Json;
@@ -22,6 +23,22 @@ public sealed partial class Configuration : IPluginConfiguration
     public AfterRunAction AfterRun { get; set; } = AfterRunAction.StayLoggedIn;
 
     public bool AutoPauseInContent { get; set; } = true;
+
+    public string LastSeenChangelogVersion { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public bool HasUnseenChangelog => !string.Equals(LastSeenChangelogVersion, ChangelogData.LatestVersion, StringComparison.Ordinal);
+
+    public void MarkChangelogSeen()
+    {
+        if (!HasUnseenChangelog)
+        {
+            return;
+        }
+
+        LastSeenChangelogVersion = ChangelogData.LatestVersion;
+        Save();
+    }
 
     public void Save()
     {
