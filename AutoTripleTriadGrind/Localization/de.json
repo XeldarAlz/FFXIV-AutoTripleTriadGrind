@@ -234,6 +234,7 @@
   "changelog.new": "Neu",
   "changelog.changes.one": "{0} Änderung",
   "changelog.changes.other": "{0} Änderungen",
+  "changelog.r1100.1": "Ein Problem wurde behoben, bei dem die Figur zu weit von einem NPC entfernt anhalten konnte, um ihn anzusprechen, und ihn dann übersprang",
   "changelog.r1000.1": "Erste Veröffentlichung",
   "about.support.title": "Mit Liebe und Sorgfalt gemacht",
   "about.support.body": "Dieses Plugin ist ein Ein-Personen-Projekt, entstanden in meiner Freizeit, weil ich dieses Spiel und seine Community liebe. Es aktuell zu halten, kostet viele dieser Stunden. Wenn es dir geholfen hat, sorgt deine Unterstützung auf Patreon dafür, dass ich ihm diese Zeit weiter schenken kann. Danke, dass du hier bist.",

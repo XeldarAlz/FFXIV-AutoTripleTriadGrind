@@ -234,6 +234,7 @@
   "changelog.new": "New",
   "changelog.changes.one": "{0} change",
   "changelog.changes.other": "{0} changes",
+  "changelog.r1100.1": "Fixed an issue where the character could stop too far from an NPC to talk to it and then skip that NPC",
   "changelog.r1000.1": "Initial release",
   "about.support.title": "Made with love and care",
   "about.support.body": "This plugin is a one-person project, built in my free time because I love this game and its community. Keeping it updated takes a lot of those hours. If it has helped you, supporting me on Patreon means I can keep giving it that time. Thank you for being here.",

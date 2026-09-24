@@ -234,6 +234,7 @@
   "changelog.new": "新",
   "changelog.changes.one": "{0} 项更改",
   "changelog.changes.other": "{0} 项更改",
+  "changelog.r1100.1": "修复了角色可能停在离 NPC 太远而无法交谈的位置，随后跳过该 NPC 的问题",
   "changelog.r1000.1": "首次发布",
   "about.support.title": "用爱与用心打造",
   "about.support.body": "这个插件是我一个人的项目，因为热爱这款游戏和它的社区，我在业余时间制作了它。保持更新需要花费大量这样的时间。如果它帮到了你，在 Patreon 上支持我，就能让我继续为它投入这些时间。谢谢你的到来。",

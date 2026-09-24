@@ -234,6 +234,7 @@
   "changelog.new": "Yeni",
   "changelog.changes.one": "{0} değişiklik",
   "changelog.changes.other": "{0} değişiklik",
+  "changelog.r1100.1": "Karakterin bir NPC ile konuşamayacak kadar uzakta durup ardından o NPC'yi atlayabilmesi sorunu düzeltildi",
   "changelog.r1000.1": "İlk sürüm",
   "about.support.title": "Sevgi ve özenle yapıldı",
   "about.support.body": "Bu eklenti, bu oyunu ve topluluğunu sevdiğim için boş zamanlarımda tek başıma geliştirdiğim bir proje. Onu güncel tutmak o saatlerin çoğunu alıyor. Size yardımcı olduysa, Patreon'da destek olmanız ona bu zamanı ayırmaya devam etmemi sağlar. Burada olduğunuz için teşekkürler.",
