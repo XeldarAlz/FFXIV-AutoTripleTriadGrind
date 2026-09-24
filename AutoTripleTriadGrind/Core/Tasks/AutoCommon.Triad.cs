@@ -5,7 +5,9 @@ using AutoTripleTriadGrind.Core.Triad.Data;
 using AutoTripleTriadGrind.Core.Triad.Decks;
 using AutoTripleTriadGrind.Core.Triad.Logic;
 using AutoTripleTriadGrind.Core.Triad.Match;
+using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace AutoTripleTriadGrind.Core.Tasks;
@@ -47,6 +49,10 @@ internal sealed class TriadNpcRun(ushort npcIndex, Func<TriadNpcRun, bool> goalM
 public abstract partial class AutoCommon
 {
     private const float InteractRangeMeters = 4f;
+    // Travel counts a stop a couple of metres past its tolerance as arrived, which can leave the NPC out of talking range.
+    private const float TalkRangeMeters = 3f;
+    private const float TalkApproachToleranceMeters = 1.5f;
+    private const int TalkApproachWatchdogMs = 10_000;
     private const int MaxInteractFailures = 6;
     private const int ChallengeOpenTimeoutMs = 15_000;
     private const int DialogSettleTimeoutMs = 8_000;
@@ -208,6 +214,7 @@ public abstract partial class AutoCommon
 
         var deadline = Environment.TickCount64 + ChallengeOpenTimeoutMs;
         var lastInteract = 0L;
+        var approached = false;
         while (Environment.TickCount64 < deadline && !CancelToken.IsCancellationRequested)
         {
             if (TriadAddons.IsVisible(TriadAddons.Request) || TriadAddons.IsVisible(TriadAddons.DeckSelect))
@@ -225,6 +232,13 @@ public abstract partial class AutoCommon
             if (step == TriadDialog.Step.Nothing && NpcInteraction.PlayerReady() && Environment.TickCount64 - lastInteract > 1_500
                 && NpcInteraction.FindNearest(run.Npc.ENpcBaseId) is { } target)
             {
+                if (!approached && await ApproachToTalk(run, target))
+                {
+                    approached = true;
+                    deadline = Environment.TickCount64 + ChallengeOpenTimeoutMs;
+                    continue;
+                }
+
                 NpcInteraction.Target(target);
                 NpcInteraction.Interact(target);
                 lastInteract = Environment.TickCount64;
@@ -235,6 +249,30 @@ public abstract partial class AutoCommon
 
         Warn($"The challenge window for {run.Name} did not open.");
         return false;
+    }
+
+    private async Task<bool> ApproachToTalk(TriadNpcRun run, IGameObject target)
+    {
+        if (Svc.Objects.LocalPlayer is not { } player)
+        {
+            return false;
+        }
+
+        var distance = Vector3.Distance(player.Position, target.Position);
+        if (distance <= TalkRangeMeters)
+        {
+            return false;
+        }
+
+        Diag($"Walking up to {run.Name}, {distance:F1}m away.");
+        var approach = new MoveOp(move => move.MoveInZone(target.Position, walkMovement.WithTolerance(TalkApproachToleranceMeters), null));
+        await RunCancellable(approach, TalkApproachWatchdogMs, "triad-approach", StuckDetector.MoveStallAbort("triad-approach"));
+        if (approach.Fault is { } fault)
+        {
+            Diag($"The walk up to {run.Name} faulted: {fault.Message}");
+        }
+
+        return true;
     }
 
     private async Task SettleDialog()
