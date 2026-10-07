@@ -92,6 +92,15 @@ public abstract partial class AutoCommon
 
             progress.SetPhase(TriadPhase.Registering);
             await RegisterPendingCards(session);
+            // Registering the latest reward can complete this NPC's collection goal.
+            // Check again before opening another challenge or applying inventory/MGP limits.
+            TriadOwnership.Refresh(force: true);
+            if (run.GoalMet(run))
+            {
+                await LeaveMatchWindows();
+                return new NpcRunResult(NpcRunEnd.GoalMet, SkipReason.None);
+            }
+
             if (CardRegistrar.FreeBagSlots() < configuration.MinFreeBagSlots)
             {
                 Svc.Chat.PrintError($"{AttgConstants.LogPrefix} Your bags are nearly full, so the run stops. Free a few slots and start again.");
