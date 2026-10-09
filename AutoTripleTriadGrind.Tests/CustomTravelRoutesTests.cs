@@ -5,11 +5,25 @@ namespace AutoTripleTriadGrind.Tests;
 
 public sealed class CustomTravelRoutesTests
 {
-    [Fact]
-    public void LowerJeunoUsesYakTelPortalAndNotQuestInstance()
+    [Theory]
+    [InlineData(3f, 0f, 0f, true)]
+    [InlineData(3.01f, 0f, 0f, false)]
+    [InlineData(6.5f, 0f, 0f, false)]
+    [InlineData(0f, 4f, 0f, false)]
+    public void InteractionRequiresActualDistanceWithinThreeMeters(float x, float y, float z, bool expected)
+    {
+        var step = new CustomTravelStep { ApproachMeters = 10f };
+        Assert.Equal(expected, step.CanInteract(Vector3.Zero, new Vector3(x, y, z)));
+    }
+
+    [Theory]
+    [InlineData(1264u)]
+    [InlineData(1265u)]
+    public void LowerJeunoUsesYakTelPortalForBothTerritoryIds(uint territoryId)
     {
         var configuration = new Configuration();
-        Assert.True(CustomTravelRoutes.TryGet(1265, configuration, out var steps));
+        Assert.True(CustomTravelRoutes.TryGet(territoryId, configuration, out var steps));
+        Assert.Equal(1265u, CustomTravelRoutes.ResolveTerritoryId(territoryId));
         Assert.True(CustomTravelRoutes.IsValid(1265, steps));
         var entrance = Assert.Single(steps);
         Assert.Equal(1189u, entrance.SourceTerritoryId);
@@ -17,8 +31,14 @@ public sealed class CustomTravelRoutesTests
         Assert.Equal(2014450u, entrance.EntranceBaseId);
         Assert.Equal(new Vector3(-528.37415f, -152.20874f, 671.13745f), entrance.Position);
         Assert.True(entrance.ConfirmEntry);
-        Assert.False(CustomTravelRoutes.TryGet(1264, configuration, out _));
     }
+
+    [Theory]
+    [InlineData(433u)]
+    [InlineData(419u)]
+    [InlineData(1189u)]
+    public void UnrelatedTerritoryIdsArePreserved(uint territoryId)
+        => Assert.Equal(territoryId, CustomTravelRoutes.ResolveTerritoryId(territoryId));
 
     [Fact]
     public void ManorUsesBuiltInRouteUnlessOverridden()
@@ -66,6 +86,11 @@ public sealed class CustomTravelRoutesTests
         step.MenuEntryIndex = -1;
         Assert.False(CustomTravelRoutes.IsValid(433, [step]));
         step.MenuEntryIndex = null;
+        step.InteractMeters = float.NaN;
+        Assert.False(CustomTravelRoutes.IsValid(433, [step]));
+        step.InteractMeters = 0;
+        Assert.False(CustomTravelRoutes.IsValid(433, [step]));
+        step.InteractMeters = 3;
         step.SourceTerritoryId = 433;
         Assert.False(CustomTravelRoutes.IsValid(433, [step]));
     }

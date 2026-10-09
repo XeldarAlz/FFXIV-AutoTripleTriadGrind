@@ -13,6 +13,10 @@ public abstract partial class AutoCommon
 
     private async Task<bool> FollowCustomRoute(uint territoryId)
     {
+        territoryId = CustomTravelRoutes.ResolveTerritoryId(territoryId);
+        if (Svc.ClientState.TerritoryType == territoryId)
+            return await WaitForPlayerReady();
+
         if (!CustomTravelRoutes.TryGet(territoryId, Plugin.Instance.Configuration, out var steps)
             || !CustomTravelRoutes.IsValid(territoryId, steps))
         {
@@ -78,29 +82,59 @@ public abstract partial class AutoCommon
         Status = $"Entering {targetName}";
         var deadline = Environment.TickCount64 + step.TimeoutMs;
         var interactionSent = false;
+        var approachAttempted = false;
         while (Environment.TickCount64 < deadline && !CancelToken.IsCancellationRequested)
         {
             if (Svc.ClientState.TerritoryType == step.TargetTerritoryId)
+            {
+                Diag($"Custom route: entered {targetName} ({step.TargetTerritoryId}).");
                 return await WaitForPlayerReady();
+            }
             if (Svc.ClientState.TerritoryType != step.SourceTerritoryId)
             {
-                Warn($"Custom route: entered an unexpected map instead of {targetName}.");
+                Warn($"Custom route: entered territory {Svc.ClientState.TerritoryType} instead of {targetName} ({step.TargetTerritoryId}).");
                 return false;
             }
             if (interactionSent)
                 AdvanceCustomEntryDialog(step);
             else if (step.EntranceBaseId != 0 && !DialogDriver.AnyOpen() && NpcInteraction.PlayerReady()
-                && NpcInteraction.FindNearest(step.EntranceBaseId) is { } entrance)
+                && NpcInteraction.FindNearest(step.EntranceBaseId) is { } entrance
+                && Svc.Objects.LocalPlayer is { } player)
             {
-                if (!WithinReach(entrance.Position, step.ApproachMeters))
+                if (!step.CanInteract(player.Position, entrance.Position))
                 {
-                    if (!await TravelTo(step.SourceTerritoryId, entrance.Position, step.ApproachMeters))
+                    // TravelTo can report arrival at a snapped floor point that is still out of interaction range.
+                    // Repeating it can complete synchronously forever on the framework thread.
+                    if (approachAttempted)
+                    {
+                        Warn($"Custom route: entrance {step.EntranceBaseId} is beyond the {step.InteractMeters:F1}m interaction limit after approaching; stopping this step.");
                         return false;
+                    }
+
+                    approachAttempted = true;
+                    var remainingMs = (int)Math.Min(10_000, deadline - Environment.TickCount64);
+                    if (remainingMs <= 0)
+                        break;
+
+                    var approach = new MoveOp(move => move.MoveInZone(entrance.Position,
+                        MovementConfig.Default.WithTolerance(0.5f),
+                        () => step.CanInteract(player.Position, entrance.Position)));
+                    await RunCancellable(approach, remainingMs, "custom-route-approach",
+                        StuckDetector.MoveStallAbort("custom-route-approach"));
+                    if (approach.Fault is { } approachFault)
+                    {
+                        Warn($"Custom route: entrance approach failed: {approachFault.Message}");
+                        return false;
+                    }
+
+                    // Always yield before reevaluating the object and the character's position.
+                    await NextFrame(5);
                     continue;
                 }
                 NpcInteraction.Target(entrance);
                 NpcInteraction.Interact(entrance);
                 interactionSent = true;
+                Diag($"Custom route: interacted with entrance {step.EntranceBaseId}; waiting for territory {step.TargetTerritoryId}.");
             }
             await NextFrame(5);
         }
@@ -108,7 +142,7 @@ public abstract partial class AutoCommon
         {
             if (interactionSent)
                 await SettleDialog();
-            Warn($"Custom route: timed out entering {targetName}; check the entrance and access requirements.");
+            Warn($"Custom route: timed out entering {targetName} ({step.TargetTerritoryId}); current territory {Svc.ClientState.TerritoryType}, interaction sent: {interactionSent}. Check the entrance and access requirements.");
         }
         return false;
     }

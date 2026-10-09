@@ -11,6 +11,7 @@ public sealed class CustomTravelStep
     public Vector3 Position { get; set; }
     public uint EntranceBaseId { get; set; }
     public float ApproachMeters { get; set; } = 3f;
+    public float InteractMeters { get; set; } = 3f;
     public int TimeoutMs { get; set; } = 30_000;
     public string MenuEntryText { get; set; } = string.Empty;
     public int? MenuEntryIndex { get; set; }
@@ -18,8 +19,14 @@ public sealed class CustomTravelStep
 
     internal bool IsValid => SourceTerritoryId != 0 && TargetTerritoryId != 0
         && SourceTerritoryId != TargetTerritoryId && float.IsFinite(ApproachMeters) && ApproachMeters > 0f
+        && float.IsFinite(InteractMeters) && InteractMeters > 0f
         && TimeoutMs > 0 && float.IsFinite(Position.X) && float.IsFinite(Position.Y) && float.IsFinite(Position.Z)
         && (MenuEntryIndex is null or >= 0);
+
+    // Interaction uses actual 3D distance with no navigation arrival slack or floor snapping.
+    internal bool CanInteract(Vector3 playerPosition, Vector3 entrancePosition)
+        => float.IsFinite(InteractMeters) && InteractMeters > 0f
+        && Vector3.Distance(playerPosition, entrancePosition) <= InteractMeters;
 }
 
 internal static class CustomTravelRoutes
@@ -35,8 +42,8 @@ internal static class CustomTravelRoutes
             EntranceBaseId = 1011217,
             MenuEntryIndex = 0,
         }],
+        // CN NPC location data can reference 1264, but observed entrance transitions land in 1265.
         // Questionable's 5236_Jeuno, sequence 2, and 5326_Dreams of Paradise, sequence 3.
-        // 1264 is the quest instance; the Triple Triad NPCs are in the public map, 1265.
         [1265] = [new()
         {
             SourceTerritoryId = 1189,
@@ -47,8 +54,13 @@ internal static class CustomTravelRoutes
         }],
     };
 
+    public static uint ResolveTerritoryId(uint territoryId) => territoryId == 1264 ? 1265u : territoryId;
+
     public static bool TryGet(uint territoryId, Configuration configuration, out CustomTravelStep[] steps)
-        => configuration.CustomRoutes.TryGetValue(territoryId, out steps!) || BuiltIn.TryGetValue(territoryId, out steps!);
+    {
+        territoryId = ResolveTerritoryId(territoryId);
+        return configuration.CustomRoutes.TryGetValue(territoryId, out steps!) || BuiltIn.TryGetValue(territoryId, out steps!);
+    }
 
     public static bool IsValid(uint territoryId, CustomTravelStep[]? steps)
     {

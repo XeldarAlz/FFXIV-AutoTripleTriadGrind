@@ -62,6 +62,7 @@ public abstract partial class AutoCommon
 
     protected async Task<bool> TravelTo(uint territoryId, Vector3 destination, float arriveWithin, bool groundStalled = false)
     {
+        territoryId = CustomTravelRoutes.ResolveTerritoryId(territoryId);
         var zoneName = TerritoryNames.Of(territoryId);
         Diag($"Travel: to {zoneName} ({territoryId}) at {FormatPosition(destination)} within {arriveWithin:F1}m, starting in territory {Svc.ClientState.TerritoryType} ({ConditionTag()})");
         for (var entry = 1; entry <= MaxZoneEntries; entry++)
