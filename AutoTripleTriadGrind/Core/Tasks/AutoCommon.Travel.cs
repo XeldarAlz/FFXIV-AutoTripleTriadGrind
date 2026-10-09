@@ -113,6 +113,11 @@ public abstract partial class AutoCommon
 
     private async Task<bool> EnterTerritory(uint territoryId, Vector3 destination, string zoneName)
     {
+        if (CustomTravelRoutes.TryGet(territoryId, Plugin.Instance.Configuration, out _))
+        {
+            return await FollowCustomRoute(territoryId);
+        }
+
         Diag($"Travel: in territory {Svc.ClientState.TerritoryType}, teleporting toward {zoneName}");
         var reached = false;
         await RunWithStatusPinned(

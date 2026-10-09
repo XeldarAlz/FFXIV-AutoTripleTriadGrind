@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\AutoTripleTriadGrind\Core\Travel\CustomTravelRoutes.cs" Link="Travel\CustomTravelRoutes.cs" />
+    <Compile Include="..\AutoTripleTriadGrind\Configuration.Travel.cs" Link="Configuration.Travel.cs" />
     <Compile Include="..\AutoTripleTriadGrind\Core\Triad\Logic\**\*.cs" Link="Logic\%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="..\AutoTripleTriadGrind\Core\Triad\Data\TriadCard.cs" Link="Data\TriadCard.cs" />
     <Compile Include="..\AutoTripleTriadGrind\Core\Triad\Data\TriadCardType.cs" Link="Data\TriadCardType.cs" />
