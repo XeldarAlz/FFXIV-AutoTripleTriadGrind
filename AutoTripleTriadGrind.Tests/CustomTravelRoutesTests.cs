@@ -56,6 +56,26 @@ public sealed class CustomTravelRoutesTests
     }
 
     [Fact]
+    public void GangosUsesDomanEnclaveAirshipUnlessOverridden()
+    {
+        var configuration = new Configuration();
+        Assert.True(CustomTravelRoutes.TryGet(915, configuration, out var steps));
+        Assert.True(CustomTravelRoutes.IsValid(915, steps));
+        var entrance = Assert.Single(steps);
+        Assert.Equal(759u, entrance.SourceTerritoryId);
+        Assert.Equal(915u, entrance.TargetTerritoryId);
+        Assert.Equal(1032884u, entrance.EntranceBaseId);
+        Assert.Equal(162u, entrance.AethernetDestinationId);
+        Assert.Equal(new Vector3(127.27539f, -4.1787133f, 98.68005f), entrance.Position);
+        Assert.True(entrance.ConfirmEntry);
+
+        CustomTravelStep[] replacement = [new() { SourceTerritoryId = 759, TargetTerritoryId = 915, EntranceBaseId = 1032884 }];
+        configuration.CustomRoutes[915] = replacement;
+        Assert.True(CustomTravelRoutes.TryGet(915, configuration, out var configured));
+        Assert.Same(replacement, configured);
+    }
+
+    [Fact]
     public void ContinuousMultiStepRouteIsAccepted()
     {
         CustomTravelStep[] steps =

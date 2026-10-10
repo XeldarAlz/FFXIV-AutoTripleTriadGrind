@@ -54,6 +54,8 @@ public abstract partial class AutoCommon
     {
         var targetName = TerritoryNames.Of(step.TargetTerritoryId);
         Diag($"Custom route: {step.SourceTerritoryId} -> {step.TargetTerritoryId}, entrance {step.EntranceBaseId}.");
+        if (step.AethernetDestinationId != 0 && !await RideCustomRouteAethernet(step))
+            return false;
         // Normal travel treats a boundary's expected map change as leaving the destination.
         var approached = step.EntranceBaseId == 0
             ? await WaitForPlayerReady() && (Svc.ClientState.TerritoryType == step.SourceTerritoryId
@@ -142,9 +144,55 @@ public abstract partial class AutoCommon
         {
             if (interactionSent)
                 await SettleDialog();
+            else
+            {
+                var entrance = NpcInteraction.FindNearest(step.EntranceBaseId);
+                var entranceState = entrance is null
+                    ? "no targetable entrance with this ID was found"
+                    : Svc.Objects.LocalPlayer is { } player
+                        ? $"entrance is {System.Numerics.Vector3.Distance(player.Position, entrance.Position):F1}m away"
+                        : "character is unavailable";
+                Warn($"Custom route: entrance {step.EntranceBaseId} interaction was not sent: {entranceState}; dialog open: {DialogDriver.AnyOpen()}; blockers: {NpcInteraction.DescribeBlockers()}.");
+            }
             Warn($"Custom route: timed out entering {targetName} ({step.TargetTerritoryId}); current territory {Svc.ClientState.TerritoryType}, interaction sent: {interactionSent}. Check the entrance and access requirements.");
         }
         return false;
+    }
+
+    private async Task<bool> RideCustomRouteAethernet(CustomTravelStep step)
+    {
+        if (!await WaitForPlayerReady()
+            || (Svc.ClientState.TerritoryType != step.SourceTerritoryId
+                && !await EnterTerritory(step.SourceTerritoryId, step.Position, TerritoryNames.Of(step.SourceTerritoryId))))
+            return false;
+
+        if (!ZoneAetherytes.TryFindAttunedAethernetStop(step.SourceTerritoryId, step.AethernetDestinationId, out var stop))
+        {
+            Diag($"Custom route: aethernet stop {step.AethernetDestinationId} is unavailable; walking to the entrance instead.");
+            return true;
+        }
+        // Already near the entrance: do not walk back to a shard for a ride that takes us farther away.
+        if (Svc.Objects.LocalPlayer is not { } player
+            || GroundDistance.Between(player.Position, step.Position) <= GroundDistance.Between(stop.Position, step.Position))
+            return true;
+
+        if (!await SafeDismount("custom-route-aethernet"))
+            return false;
+        await WaitForNavmeshReady(AethernetNavmeshWaitMs, AethernetNavmeshPollFrames);
+        if (CancelToken.IsCancellationRequested)
+            return false;
+
+        await RunWithStatusPinned($"Riding the aethernet to {stop.Name}", async () =>
+        {
+            Diag($"Custom route: riding the aethernet to {stop.Name} ({stop.Id}) before approaching entrance {step.EntranceBaseId}.");
+            var operation = new MoveOp(move => move.Aethernet(step.SourceTerritoryId, stop.Position));
+            var completed = await RunCancellable(operation, AethernetLegMs, "custom-route-aethernet");
+            if (operation.Fault is { } fault)
+                Diag($"Custom route: aethernet ride faulted: {fault.Message}; walking to the entrance instead.");
+            else if (!completed && !CancelToken.IsCancellationRequested)
+                Diag("Custom route: aethernet ride did not complete; walking to the entrance instead.");
+        });
+        return !CancelToken.IsCancellationRequested;
     }
 
     private static void AdvanceCustomEntryDialog(CustomTravelStep step)

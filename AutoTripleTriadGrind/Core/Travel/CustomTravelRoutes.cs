@@ -10,6 +10,7 @@ public sealed class CustomTravelStep
     public uint TargetTerritoryId { get; set; }
     public Vector3 Position { get; set; }
     public uint EntranceBaseId { get; set; }
+    public uint AethernetDestinationId { get; set; }
     public float ApproachMeters { get; set; } = 3f;
     public float InteractMeters { get; set; } = 3f;
     public int TimeoutMs { get; set; } = 30_000;
@@ -41,6 +42,16 @@ internal static class CustomTravelRoutes
             Position = new Vector3(17.990356f, 16.009666f, -9.567444f),
             EntranceBaseId = 1011217,
             MenuEntryIndex = 0,
+        }],
+        // The permanent Doman Enclave airship pilot. Quest-only pilot 1032869 shares this position.
+        [915] = [new()
+        {
+            SourceTerritoryId = 759,
+            TargetTerritoryId = 915,
+            Position = new Vector3(127.27539f, -4.1787133f, 98.68005f),
+            EntranceBaseId = 1032884,
+            AethernetDestinationId = 162,
+            ConfirmEntry = true,
         }],
         // CN NPC location data can reference 1264, but observed entrance transitions land in 1265.
         // Questionable's 5236_Jeuno, sequence 2, and 5326_Dreams of Paradise, sequence 3.

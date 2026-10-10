@@ -159,6 +159,21 @@ internal static class ZoneAetherytes
 
     private static bool IsUsable(AethernetNode node) => node.Visible && IsAttuned(node.Stop.Id);
 
+    public static bool TryFindAttunedAethernetStop(uint territoryId, uint stopId, out ZoneAetheryte stop)
+    {
+        foreach (var node in AethernetIn(territoryId))
+        {
+            if (node.Stop.Id == stopId && IsUsable(node))
+            {
+                stop = node.Stop;
+                return true;
+            }
+        }
+
+        stop = default;
+        return false;
+    }
+
     private static int ClosestNode(AethernetNode[] nodes, Vector3 position, bool usableOnly)
     {
         var closest = -1;
