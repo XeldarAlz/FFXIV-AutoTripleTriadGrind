@@ -56,7 +56,8 @@ public abstract partial class AutoCommon
             run.LossStreak = outcome == MatchOutcome.Lost ? run.LossStreak + 1 : 0;
             session.RecordMatch(outcome);
             progress.RecordNpcMatch(outcome);
-            var newCard = TriadData.Set.CardIdByItemId.TryGetValue(rewardItem, out var cardId) && !TriadOwnership.IsOwned(cardId);
+            var newCard = TriadData.Set.CardIdByItemId.TryGetValue(rewardItem, out var cardId) && !TriadOwnership.IsOwned(cardId)
+                && !unregistrableItems.Contains(rewardItem);
             Diag($"{run.Name}: match {run.Matches} {outcome}, reward item {rewardItem}{(newCard ? $" ({TriadData.Set.CardName(cardId)}, new)" : string.Empty)}.");
             if (newCard)
             {

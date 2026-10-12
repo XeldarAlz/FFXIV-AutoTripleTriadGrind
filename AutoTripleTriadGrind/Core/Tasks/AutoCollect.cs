@@ -75,7 +75,7 @@ internal sealed class AutoCollect(AutoTriadSession session, TriadProgress progre
             {
                 progress.SetQueueNext(index);
                 var cards = assignments[index].Cards;
-                var run = new TriadNpcRun(assignments[index].NpcIndex, _ => AllOwned(cards)) { MatchLimit = configuration.MaxMatchesPerNpc };
+                var run = new TriadNpcRun(assignments[index].NpcIndex, _ => AllCollected(cards)) { MatchLimit = configuration.MaxMatchesPerNpc };
                 Status = $"Collecting from {run.Name}";
                 var result = await PlayNpc(run, session, progress);
                 switch (result.End)
@@ -97,11 +97,11 @@ internal sealed class AutoCollect(AutoTriadSession session, TriadProgress progre
         }
     }
 
-    private static bool AllOwned(ushort[] cards)
+    private static bool AllCollected(ushort[] cards)
     {
         for (var index = 0; index < cards.Length; index++)
         {
-            if (!TriadOwnership.IsOwned(cards[index]))
+            if (!CardRegistrar.IsCollected(cards[index]))
             {
                 return false;
             }
