@@ -1,12 +1,12 @@
 using AutoTripleTriadGrind.Core;
 using AutoTripleTriadGrind.Core.Localization;
+using AutoTripleTriadGrind.Core.Travel;
+using AutoTripleTriadGrind.Core.Triad.Data;
 using Dalamud;
 using Dalamud.Interface;
 using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
-using ECommons.DalamudServices;
-using Lumina.Excel.Sheets;
 using System.IO;
 
 namespace AutoTripleTriadGrind.Windows;
@@ -54,7 +54,6 @@ internal static class Fonts
     private static byte[]? latinFont;
     private static ushort[] latinRanges = [0];
     private static ushort[] mergeRanges = [0];
-    private static ushort[] gameGlyphRanges = [0];
     private static int cjkFace = NotoCjkJapaneseFace;
     private static float unitPx = UiBuilder.DefaultFontSizePx;
 
@@ -71,7 +70,6 @@ internal static class Fonts
         builder = uiBuilder;
         atlas = uiBuilder.FontAtlas;
         latinFont = LoadLatinFont(Path.Combine(pluginDirectory, "Fonts", LatinFontFile));
-        gameGlyphRanges = ReadGameGlyphRanges();
         RefreshRanges();
 
         body = TextHandle(BodyScale);
@@ -82,6 +80,7 @@ internal static class Fonts
         iconLarge = IconHandle(IconLargeScale);
         iconDisplay = IconHandle(IconDisplayScale);
         uiBuilder.DefaultFontChanged += Rebuild;
+        TriadData.DataLoaded += Rebuild;
 
         if (atlas.AutoRebuildMode == FontAtlasAutoRebuildMode.Disable)
         {
@@ -98,6 +97,8 @@ internal static class Fonts
             builder.DefaultFontChanged -= Rebuild;
         }
 
+        TriadData.DataLoaded -= Rebuild;
+
         body?.Dispose();
         title?.Dispose();
         headline?.Dispose();
@@ -109,7 +110,6 @@ internal static class Fonts
         builder = null;
         atlas = null;
         latinFont = null;
-        gameGlyphRanges = [0];
     }
 
     public static IDisposable PushBody() => body?.Push() ?? noOp;
@@ -215,8 +215,8 @@ internal static class Fonts
         GlyphRanges.MarkRanges(merge, SymbolBlocks);
         GlyphRanges.MarkRanges(extra, Loc.Current.ExtraGlyphRanges);
         GlyphRanges.MarkRanges(extra, Loc.CatalogGlyphRanges);
-        GlyphRanges.MarkRanges(extra, gameGlyphRanges);
         MarkNativeNames(extra);
+        MarkGameNames(extra);
 
         for (var codepoint = GlyphRanges.FirstNonAsciiCodepoint; codepoint < GlyphRanges.CodepointCount; codepoint++)
         {
@@ -243,30 +243,35 @@ internal static class Fonts
     private static bool IsLatinCodepoint(int codepoint)
         => codepoint <= LatinBlocksEnd || (codepoint >= LatinAdditionalStart && codepoint <= LatinAdditionalEnd);
 
-    // Game data follows the client's language independently of the interface language. Keep its
-    // glyphs in every text tier, including when the user switches to an English interface.
-    private static ushort[] ReadGameGlyphRanges()
-    {
-        var present = new bool[GlyphRanges.CodepointCount];
-        foreach (var row in Svc.Data.GetExcelSheet<ENpcResident>())
-            GlyphRanges.MarkText(present, row.Singular.ExtractText());
-        foreach (var row in Svc.Data.GetExcelSheet<PlaceName>())
-            GlyphRanges.MarkText(present, row.Name.ExtractText());
-        foreach (var row in Svc.Data.GetExcelSheet<TripleTriadCard>())
-            GlyphRanges.MarkText(present, row.Name.ExtractText());
-        foreach (var row in Svc.Data.GetExcelSheet<TripleTriadRule>())
-            GlyphRanges.MarkText(present, row.Name.ExtractText());
-        foreach (var row in Svc.Data.GetExcelSheet<Quest>())
-            GlyphRanges.MarkText(present, row.Name.ExtractText());
-        return GlyphRanges.ToRanges(present);
-    }
-
     private static void MarkNativeNames(bool[] extra)
     {
         var languages = Languages.All;
         for (var languageIndex = 0; languageIndex < languages.Length; languageIndex++)
         {
             GlyphRanges.MarkText(extra, languages[languageIndex].NativeName);
+        }
+    }
+
+    private static void MarkGameNames(bool[] extra)
+    {
+        var data = TriadData.Set;
+        MarkTexts(extra, data.NpcNames);
+        MarkTexts(extra, data.NpcUnlockQuestNames);
+        MarkTexts(extra, data.CardNames);
+        MarkTexts(extra, data.RuleNames);
+
+        var npcs = data.Npcs;
+        for (var npcIndex = 0; npcIndex < npcs.Length; npcIndex++)
+        {
+            GlyphRanges.MarkText(extra, TerritoryNames.Of(npcs[npcIndex].TerritoryId));
+        }
+    }
+
+    private static void MarkTexts(bool[] extra, string[] texts)
+    {
+        for (var textIndex = 0; textIndex < texts.Length; textIndex++)
+        {
+            GlyphRanges.MarkText(extra, texts[textIndex]);
         }
     }
 

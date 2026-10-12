@@ -10,6 +10,8 @@ internal static class TriadData
 
     public static string FailureReason { get; private set; } = string.Empty;
 
+    public static event Action? DataLoaded;
+
     public static TriadDataSet Set => current ?? TriadDataSet.Empty;
 
     public static void EnsureLoaded()
@@ -23,6 +25,7 @@ internal static class TriadData
         {
             current = loaded;
             Logic.TriadCards.Use(loaded.Cards);
+            DataLoaded?.Invoke();
             return;
         }
 
