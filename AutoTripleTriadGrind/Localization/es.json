@@ -359,7 +359,7 @@
   "deck.timeoutHelp": "Cuánto tiempo puede buscar mazo el optimizador. Al acabarse el tiempo se usa el mejor mazo encontrado hasta entonces.",
   "deck.secondsFormat": "%d s",
   "deck.threads": "Hilos de trabajo",
-  "deck.threadsHelp": "Cuántos hilos de CPU puede usar el optimizador. Auto deja un núcleo libre para el juego.",
+  "deck.threadsHelp": "Cuántos hilos de CPU puede usar el optimizador. Auto usa una cuarta parte para que el juego siga fluido.",
   "deck.threadsAuto": "Auto",
   "play.cat": "Juego",
   "play.catSub": "Cuánto quedarse con un PNJ y cuándo pasar al siguiente.",

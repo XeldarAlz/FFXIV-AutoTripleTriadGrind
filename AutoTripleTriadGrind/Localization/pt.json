@@ -359,7 +359,7 @@
   "deck.timeoutHelp": "Quanto tempo o otimizador pode buscar um deck. Quando o tempo acaba, o melhor deck encontrado até ali é usado.",
   "deck.secondsFormat": "%d s",
   "deck.threads": "Threads de trabalho",
-  "deck.threadsHelp": "Quantas threads de CPU o otimizador pode usar. Auto deixa um núcleo livre para o jogo.",
+  "deck.threadsHelp": "Quantas threads de CPU o otimizador pode usar. Auto usa um quarto delas para o jogo continuar fluido.",
   "deck.threadsAuto": "Auto",
   "play.cat": "Jogo",
   "play.catSub": "Quanto tempo ficar com um NPC e quando seguir em frente.",

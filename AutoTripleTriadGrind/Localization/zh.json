@@ -359,7 +359,7 @@
   "deck.timeoutHelp": "优化器搜索卡组的最长时间。时间用完时会使用目前找到的最佳卡组。",
   "deck.secondsFormat": "%d 秒",
   "deck.threads": "工作线程",
-  "deck.threadsHelp": "优化器可使用的CPU线程数。自动会为游戏保留一个核心。",
+  "deck.threadsHelp": "优化器可使用的CPU线程数。自动会使用四分之一，以保证游戏流畅运行。",
   "deck.threadsAuto": "自动",
   "play.cat": "对战",
   "play.catSub": "在一个NPC上停留多久，以及何时换下一个。",

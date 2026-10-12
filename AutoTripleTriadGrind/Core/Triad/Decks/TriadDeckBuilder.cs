@@ -75,7 +75,7 @@ internal static class TriadDeckBuilder
         running = new CancellationTokenSource(TimeSpan.FromSeconds(Math.Max(5, configuration.OptimizerTimeoutSeconds)));
         buildingFor = rowId;
         buildingRules = ruleMask;
-        var threads = configuration.OptimizerThreads > 0 ? configuration.OptimizerThreads : Math.Max(1, Environment.ProcessorCount - 1);
+        var threads = configuration.OptimizerThreads > 0 ? configuration.OptimizerThreads : AttgConstants.BackgroundWorkerThreads;
         var job = optimizer;
         var token = running.Token;
         build = Task.Run(() => job.Run(threads, token), CancellationToken.None);

@@ -200,7 +200,7 @@ public abstract partial class AutoCommon
     // The solver runs off the game thread; the board is only read, and a card only played, on the framework thread.
     private async Task<bool> PlayBoard(TriadNpcRun run)
     {
-        TriadRolloutAgent.MaxParallelism = Math.Max(1, Environment.ProcessorCount / 4);
+        TriadRolloutAgent.MaxParallelism = AttgConstants.BackgroundWorkerThreads;
         var memory = run.Memory;
         var screen = run.Screen;
         Task<(bool Found, int Card, int Cell)>? solving = null;

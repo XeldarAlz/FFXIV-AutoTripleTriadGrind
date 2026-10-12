@@ -359,7 +359,7 @@
   "deck.timeoutHelp": "Optimize edicinin deste araması için ayrılan süre. Süre dolduğunda o ana kadar bulunan en iyi deste kullanılır.",
   "deck.secondsFormat": "%d sn",
   "deck.threads": "İş parçacıkları",
-  "deck.threadsHelp": "Optimize edicinin kullanabileceği CPU iş parçacığı sayısı. Otomatik, oyun için bir çekirdeği boş bırakır.",
+  "deck.threadsHelp": "Optimize edicinin kullanabileceği CPU iş parçacığı sayısı. Otomatik, oyunun akıcı kalması için bunların dörtte birini kullanır.",
   "deck.threadsAuto": "Otomatik",
   "play.cat": "Oyun",
   "play.catSub": "Bir NPC ile ne kadar kalınacağı ve ne zaman geçileceği.",

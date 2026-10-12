@@ -359,7 +359,7 @@
   "deck.timeoutHelp": "Durée maximale de recherche d'un deck par l'optimiseur. Quand le temps est écoulé, le meilleur deck trouvé jusque-là est utilisé.",
   "deck.secondsFormat": "%d s",
   "deck.threads": "Threads de calcul",
-  "deck.threadsHelp": "Nombre de threads CPU que l'optimiseur peut utiliser. Auto laisse un cœur libre pour le jeu.",
+  "deck.threadsHelp": "Nombre de threads CPU que l'optimiseur peut utiliser. Auto en utilise un quart pour que le jeu reste fluide.",
   "deck.threadsAuto": "Auto",
   "play.cat": "Jeu",
   "play.catSub": "Combien de temps rester sur un PNJ et quand passer au suivant.",
