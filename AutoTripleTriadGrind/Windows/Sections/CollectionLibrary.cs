@@ -8,6 +8,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using System.Numerics;
+using System.Text;
 
 namespace AutoTripleTriadGrind.Windows.Sections;
 
@@ -543,9 +544,9 @@ internal static class CollectionLibrary
                 Tooltip.Text(Loc.T(L.Collection.TooltipRegional), Styling.TextDim);
             }
 
-            if (eligibility == SkipReason.Locked && set.NpcUnlockQuestNames[npcIndex].Length > 0)
+            if (eligibility == SkipReason.Locked && LockedQuestText(npcIndex) is { Length: > 0 } lockedQuest)
             {
-                Tooltip.Text(Loc.T(L.Collection.TooltipLockedQuest, set.NpcUnlockQuestNames[npcIndex]), Styling.AccentAmber);
+                Tooltip.Text(lockedQuest, Styling.AccentAmber);
             }
             else if (eligibility != SkipReason.None)
             {
@@ -554,6 +555,40 @@ internal static class CollectionLibrary
 
             Tooltip.Text(Loc.T(L.Collection.TooltipSelectNpc), Styling.TextMuted);
         }
+    }
+
+    private static string LockedQuestText(int npcIndex)
+    {
+        var slot = TriadUnlock.MissingQuestSlot(npcIndex);
+        if (slot == TriadUnlock.NoMissingQuest)
+        {
+            return string.Empty;
+        }
+
+        var set = TriadData.Set;
+        var names = set.UnlockQuestNamesOf(npcIndex);
+        if (!set.Npcs[npcIndex].UnlockNeedsAnyQuest)
+        {
+            return names[slot].Length == 0 ? string.Empty : Loc.T(L.Collection.TooltipLockedQuest, names[slot]);
+        }
+
+        var choices = new StringBuilder();
+        for (var nameIndex = 0; nameIndex < names.Length; nameIndex++)
+        {
+            if (names[nameIndex].Length == 0)
+            {
+                continue;
+            }
+
+            if (choices.Length > 0)
+            {
+                choices.Append(" / ");
+            }
+
+            choices.Append(names[nameIndex]);
+        }
+
+        return Loc.T(L.Collection.TooltipLockedAnyQuest, choices.ToString());
     }
 
     private static void DrawCardTooltip(ushort cardId, bool owned, bool selected)

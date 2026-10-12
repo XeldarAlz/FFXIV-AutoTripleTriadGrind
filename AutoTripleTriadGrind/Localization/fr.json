@@ -329,6 +329,7 @@
   "collection.tooltip.rules": "Règles : {0}",
   "collection.tooltip.regional": "Applique aussi les règles régionales de sa zone.",
   "collection.tooltip.lockedQuest": "Verrouillé : terminez « {0} » pour débloquer ce PNJ.",
+  "collection.tooltip.lockedAnyQuest": "Verrouillé : terminez l'une de ces quêtes pour débloquer ce PNJ : {0}",
   "collection.tooltip.selectNpc": "Cliquez pour choisir ou retirer toutes les cartes manquantes de ce PNJ.",
   "collection.tooltip.owned": "Possédée",
   "collection.tooltip.selected": "Choisie. Cliquez pour la retirer du plan.",

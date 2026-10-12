@@ -329,6 +329,7 @@
   "collection.tooltip.rules": "Правила: {0}",
   "collection.tooltip.regional": "Также использует региональные правила своей зоны.",
   "collection.tooltip.lockedQuest": "Заблокировано: выполните «{0}», чтобы открыть этого NPC.",
+  "collection.tooltip.lockedAnyQuest": "Заблокировано: выполните одно из этих заданий, чтобы открыть этого NPC: {0}",
   "collection.tooltip.selectNpc": "Нажмите, чтобы выбрать или снять все недостающие карты этого NPC.",
   "collection.tooltip.owned": "Есть",
   "collection.tooltip.selected": "Выбрана. Нажмите, чтобы убрать из плана.",

@@ -329,6 +329,7 @@
   "collection.tooltip.rules": "ルール: {0}",
   "collection.tooltip.regional": "エリアのローカルルールも適用されます。",
   "collection.tooltip.lockedQuest": "未開放：「{0}」をクリアするとこのNPCが開放されます。",
+  "collection.tooltip.lockedAnyQuest": "未開放：次のいずれかをクリアするとこのNPCが開放されます：{0}",
   "collection.tooltip.selectNpc": "クリックすると、このNPCの未所持カードをすべて選択または解除します。",
   "collection.tooltip.owned": "所持済み",
   "collection.tooltip.selected": "選択中。クリックでプランから外します。",

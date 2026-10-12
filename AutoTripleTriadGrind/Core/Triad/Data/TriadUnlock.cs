@@ -5,33 +5,51 @@ namespace AutoTripleTriadGrind.Core.Triad.Data;
 
 internal static unsafe class TriadUnlock
 {
-    // Quest sheet row ids carry this offset over the ids the quest manager keys completion by.
-    private const uint QuestRowOffset = 65536;
+    public const int NoMissingQuest = -1;
 
     public static bool IsUnlocked(int npcIndex)
-    {
-        var npc = TriadData.Set.Npcs[npcIndex];
-        return IsQuestDone(npc.UnlockQuestId) || TriadOwnership.IsNpcBeaten(npc.TriadRowId);
-    }
+        => MissingQuestSlot(npcIndex) == NoMissingQuest || TriadOwnership.IsNpcBeaten(TriadData.Set.Npcs[npcIndex].TriadRowId);
 
-    public static bool IsQuestDone(uint questRowId)
+    public static int MissingQuestSlot(int npcIndex)
     {
-        if (questRowId == 0)
+        var set = TriadData.Set;
+        var quests = set.UnlockQuestsOf(npcIndex);
+        var needsAnyQuest = set.Npcs[npcIndex].UnlockNeedsAnyQuest;
+        var missingSlot = NoMissingQuest;
+        for (var slot = 0; slot < quests.Length; slot++)
         {
-            return true;
+            if (quests[slot] == 0)
+            {
+                continue;
+            }
+
+            if (IsQuestDone(quests[slot]))
+            {
+                if (needsAnyQuest)
+                {
+                    return NoMissingQuest;
+                }
+
+                continue;
+            }
+
+            if (missingSlot == NoMissingQuest)
+            {
+                missingSlot = slot;
+            }
         }
 
-        var shortId = questRowId & 0xFFFF;
-        var shifted = questRowId > QuestRowOffset ? questRowId - QuestRowOffset : questRowId + QuestRowOffset;
-        if (QuestManager.IsQuestComplete(questRowId) || QuestManager.IsQuestComplete(shortId) || QuestManager.IsQuestComplete(shifted))
+        return missingSlot;
+    }
+
+    private static bool IsQuestDone(uint questRowId)
+    {
+        if (QuestManager.IsQuestComplete(questRowId) || QuestManager.IsQuestComplete((ushort)(questRowId & ushort.MaxValue)))
         {
             return true;
         }
 
         var uiState = UIState.Instance();
-        return uiState != null
-            && (uiState->IsUnlockLinkUnlockedOrQuestCompleted(questRowId)
-                || uiState->IsUnlockLinkUnlockedOrQuestCompleted(shortId)
-                || uiState->IsUnlockLinkUnlockedOrQuestCompleted(shifted));
+        return uiState != null && uiState->IsUnlockLinkUnlockedOrQuestCompleted(questRowId);
     }
 }

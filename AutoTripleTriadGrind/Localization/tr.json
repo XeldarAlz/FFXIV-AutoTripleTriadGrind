@@ -329,6 +329,7 @@
   "collection.tooltip.rules": "Kurallar: {0}",
   "collection.tooltip.regional": "Bölgesinin yerel kurallarıyla da oynar.",
   "collection.tooltip.lockedQuest": "Kilitli: bu NPC'yi açmak için “{0}” görevini tamamlayın.",
+  "collection.tooltip.lockedAnyQuest": "Kilitli: bu NPC'yi açmak için şu görevlerden birini tamamlayın: {0}",
   "collection.tooltip.selectNpc": "Bu NPC'den eksik olan tüm kartları seçmek ya da bırakmak için tıklayın.",
   "collection.tooltip.owned": "Sahip olunan",
   "collection.tooltip.selected": "Seçili. Plandan çıkarmak için tıklayın.",

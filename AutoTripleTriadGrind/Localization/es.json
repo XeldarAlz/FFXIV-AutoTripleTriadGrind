@@ -329,6 +329,7 @@
   "collection.tooltip.rules": "Reglas: {0}",
   "collection.tooltip.regional": "También juega con las reglas regionales de su zona.",
   "collection.tooltip.lockedQuest": "Bloqueado: completa «{0}» para desbloquear este PNJ.",
+  "collection.tooltip.lockedAnyQuest": "Bloqueado: completa una de estas misiones para desbloquear este PNJ: {0}",
   "collection.tooltip.selectNpc": "Haz clic para elegir o quitar todas las cartas que te faltan de este PNJ.",
   "collection.tooltip.owned": "Obtenida",
   "collection.tooltip.selected": "Elegida. Haz clic para quitarla del plan.",
