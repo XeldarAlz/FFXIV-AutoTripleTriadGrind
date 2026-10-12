@@ -1,10 +1,12 @@
 using ECommons;
 using ECommons.Automation;
+using ECommons.DalamudServices;
 using ECommons.Throttlers;
 using ECommons.UIHelpers.AddonMasterImplementations;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using Lumina.Excel.Sheets;
 
 namespace AutoTripleTriadGrind.Core.Game.Ops;
 
@@ -20,10 +22,13 @@ internal static unsafe class TriadDialog
     private const string TalkThrottleKey = "ATTG.Triad.Talk";
     private const string MenuThrottleKey = "ATTG.Triad.Menu";
     private const string YesnoThrottleKey = "ATTG.Triad.Yesno";
+    private const uint TriadChallengeAddonRowId = 9184;
 
     // Map icons the menu shows beside the Triple Triad entry.
     private static readonly uint[] triadEntryIcons = [60091u, 61721u, 61723u];
-    private static readonly string[] triadEntryWords = ["Triple Triad", "Triple-Triad", "triad", "triade", "triplo", "トリプル", "幻卡"];
+    private static readonly string[] fallbackEntryWords = ["Triple Triad", "Triple-Triad", "triad", "triade", "triplo", "トリプル", "幻卡"];
+
+    private static string[]? triadEntryWords;
 
     public enum Step : byte
     {
@@ -154,15 +159,22 @@ internal static unsafe class TriadDialog
             return false;
         }
 
-        for (var index = 0; index < triadEntryWords.Length; index++)
+        var words = triadEntryWords ??= ReadTriadEntryWords();
+        for (var index = 0; index < words.Length; index++)
         {
-            if (text.Contains(triadEntryWords[index], StringComparison.OrdinalIgnoreCase))
+            if (text.Contains(words[index], StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private static string[] ReadTriadEntryWords()
+    {
+        var challenge = Svc.Data.GetExcelSheet<Addon>().GetRowOrDefault(TriadChallengeAddonRowId)?.Text.ExtractText();
+        return string.IsNullOrWhiteSpace(challenge) ? fallbackEntryWords : [challenge, .. fallbackEntryWords];
     }
 
     private static bool IsOwnedByTriad(AtkUnitBase* addon)
