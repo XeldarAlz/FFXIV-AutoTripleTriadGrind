@@ -48,7 +48,7 @@ internal sealed class TriadNpcRun(ushort npcIndex, Func<TriadNpcRun, bool> goalM
 
 public abstract partial class AutoCommon
 {
-    private const float InteractRangeMeters = 4f;
+    private const float InteractRangeMeters = 6f;
     // Travel counts a stop a couple of metres past its tolerance as arrived, which can leave the NPC out of talking range.
     private const float TalkRangeMeters = 3f;
     private const float TalkApproachToleranceMeters = 1.5f;
