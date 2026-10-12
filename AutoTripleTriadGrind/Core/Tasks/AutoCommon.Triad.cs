@@ -77,6 +77,8 @@ public abstract partial class AutoCommon
 
         while (!CancelToken.IsCancellationRequested)
         {
+            progress.SetPhase(TriadPhase.Registering);
+            await RegisterPendingCards(session);
             TriadOwnership.Refresh(force: true);
             if (run.GoalMet(run))
             {
@@ -88,17 +90,6 @@ public abstract partial class AutoCommon
             {
                 await LeaveMatchWindows();
                 return new NpcRunResult(NpcRunEnd.Skipped, limit);
-            }
-
-            progress.SetPhase(TriadPhase.Registering);
-            await RegisterPendingCards(session);
-            // Registering the latest reward can complete this NPC's collection goal.
-            // Check again before opening another challenge or applying inventory/MGP limits.
-            TriadOwnership.Refresh(force: true);
-            if (run.GoalMet(run))
-            {
-                await LeaveMatchWindows();
-                return new NpcRunResult(NpcRunEnd.GoalMet, SkipReason.None);
             }
 
             if (CardRegistrar.FreeBagSlots() < configuration.MinFreeBagSlots)
