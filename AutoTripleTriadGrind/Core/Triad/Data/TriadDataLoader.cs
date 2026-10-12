@@ -174,8 +174,9 @@ internal static class TriadDataLoader
         List<string> questNames, List<ushort> deckCards, List<ushort> rewardCards)
     {
         var triadSheet = Svc.Data.GetExcelSheet<TriadSheet>();
-        var eNpcByTriadRow = MapTriadRowsToENpcs(triadSheet);
-        var levels = ReadNpcLevels(eNpcByTriadRow);
+        var candidates = FindTriadENpcs(triadSheet);
+        var levels = ReadNpcLevels(candidates);
+        var eNpcByTriadRow = MapTriadRowsToENpcs(candidates, levels);
         var residentSheet = Svc.Data.GetExcelSheet<ENpcResident>();
         var mapSheet = Svc.Data.GetExcelSheet<Map>();
         var territorySheet = Svc.Data.GetExcelSheet<TerritoryType>();
@@ -189,12 +190,7 @@ internal static class TriadDataLoader
                 continue;
             }
 
-            if (!levels.TryGetValue(eNpcId, out var level))
-            {
-                RunLog.Debug($"Triad NPC row {row.RowId} (ENpc {eNpcId}) has no map position; left out.");
-                continue;
-            }
-
+            var level = levels[eNpcId];
             var cardStart = deckCards.Count;
             var fixedCount = AppendDeck(row.TripleTriadCardFixed, cards, deckCards);
             var variableCount = AppendDeck(row.TripleTriadCardVariable, cards, deckCards);
@@ -237,14 +233,12 @@ internal static class TriadDataLoader
             }
 
             var map = mapSheet.GetRowOrDefault(level.MapId);
-            // Keep the selected instance's territory; shared maps can point to a different instance.
-            var territoryId = level.TerritoryId;
             var mapCoordinates = map is null
                 ? Vector2.Zero
                 : new Vector2(ToMapCoordinate(level.Position.X, map.Value.SizeFactor, map.Value.OffsetX), ToMapCoordinate(level.Position.Z, map.Value.SizeFactor, map.Value.OffsetY));
-            var expansion = (byte)(territorySheet.GetRowOrDefault(territoryId)?.ExVersion.RowId ?? 0);
+            var expansion = (byte)(territorySheet.GetRowOrDefault(level.TerritoryId)?.ExVersion.RowId ?? 0);
 
-            npcs.Add(new TriadNpc(row.RowId, eNpcId, territoryId, level.MapId, level.Position, mapCoordinates, unlockQuestId, row.Fee,
+            npcs.Add(new TriadNpc(row.RowId, eNpcId, level.TerritoryId, level.MapId, level.Position, mapCoordinates, unlockQuestId, row.Fee,
                 ruleMask, row.UsesRegionalRules, expansion, cardStart, (byte)fixedCount, (byte)variableCount, rewardStart, (byte)(rewardCards.Count - rewardStart)));
             names.Add(FixNameCasing(residentSheet.GetRowOrDefault(eNpcId)?.Singular.ExtractText() ?? $"NPC {eNpcId}"));
             questNames.Add(unlockQuestId == 0 ? string.Empty : questSheet.GetRowOrDefault(unlockQuestId)?.Name.ExtractText() ?? string.Empty);
@@ -285,7 +279,7 @@ internal static class TriadDataLoader
         return false;
     }
 
-    private static Dictionary<uint, uint> MapTriadRowsToENpcs(Lumina.Excel.ExcelSheet<TriadSheet> triadSheet)
+    private static List<TriadENpc> FindTriadENpcs(Lumina.Excel.ExcelSheet<TriadSheet> triadSheet)
     {
         var triadRows = new HashSet<uint>(triadSheet.Count);
         for (var rowIndex = 0; rowIndex < triadSheet.Count; rowIndex++)
@@ -298,72 +292,70 @@ internal static class TriadDataLoader
         }
 
         var eNpcSheet = Svc.Data.GetExcelSheet<ENpcBase>();
-        // Read positions for every candidate before choosing a single instance for each Triple Triad row.
-        var candidates = new Dictionary<uint, uint>();
+        var candidates = new List<TriadENpc>();
         for (var rowIndex = 0; rowIndex < eNpcSheet.Count; rowIndex++)
         {
             var eNpc = eNpcSheet.GetRowAt(rowIndex);
             for (var dataIndex = 0; dataIndex < eNpc.ENpcData.Count; dataIndex++)
             {
-                if (triadRows.Contains(eNpc.ENpcData[dataIndex].RowId))
+                var dataRow = eNpc.ENpcData[dataIndex].RowId;
+                if (triadRows.Contains(dataRow))
                 {
-                    candidates.Add(eNpc.RowId, eNpc.RowId);
+                    candidates.Add(new TriadENpc(eNpc.RowId, dataRow));
                     break;
                 }
             }
         }
 
-        var candidateLevels = ReadNpcLevels(candidates);
+        return candidates;
+    }
+
+    private static Dictionary<uint, uint> MapTriadRowsToENpcs(List<TriadENpc> candidates, Dictionary<uint, NpcLevel> levels)
+    {
         var byTriadRow = new Dictionary<uint, uint>();
-        for (var rowIndex = 0; rowIndex < eNpcSheet.Count; rowIndex++)
+        for (var candidateIndex = 0; candidateIndex < candidates.Count; candidateIndex++)
         {
-            var eNpc = eNpcSheet.GetRowAt(rowIndex);
-            if (!candidateLevels.TryGetValue(eNpc.RowId, out var candidateLevel))
+            var candidate = candidates[candidateIndex];
+            if (!levels.TryGetValue(candidate.ENpcId, out var level))
             {
                 continue;
             }
 
-            for (var dataIndex = 0; dataIndex < eNpc.ENpcData.Count; dataIndex++)
+            if (!byTriadRow.TryGetValue(candidate.TriadRowId, out var currentENpcId) || IsBetterLocation(level, levels[currentENpcId]))
             {
-                var dataRow = eNpc.ENpcData[dataIndex].RowId;
-                if (!triadRows.Contains(dataRow))
-                {
-                    continue;
-                }
-
-                if (!byTriadRow.TryAdd(dataRow, eNpc.RowId)
-                    && PreferNpcLocation(candidateLevel, candidateLevels[byTriadRow[dataRow]]))
-                {
-                    byTriadRow[dataRow] = eNpc.RowId;
-                }
-                break;
+                byTriadRow[candidate.TriadRowId] = candidate.ENpcId;
             }
         }
 
         return byTriadRow;
     }
 
-    private readonly record struct NpcLevel(Vector3 Position, uint MapId, uint TerritoryId);
+    private readonly record struct TriadENpc(uint ENpcId, uint TriadRowId);
 
-    private static Dictionary<uint, NpcLevel> ReadNpcLevels(Dictionary<uint, uint> eNpcByTriadRow)
+    private readonly record struct NpcLevel(Vector3 Position, uint MapId, uint TerritoryId, bool OnEventMap);
+
+    private static Dictionary<uint, NpcLevel> ReadNpcLevels(List<TriadENpc> candidates)
     {
-        var wanted = new HashSet<uint>(eNpcByTriadRow.Values);
+        var wanted = new HashSet<uint>(candidates.Count);
+        for (var candidateIndex = 0; candidateIndex < candidates.Count; candidateIndex++)
+        {
+            wanted.Add(candidates[candidateIndex].ENpcId);
+        }
+
         var levelSheet = Svc.Data.GetExcelSheet<Level>();
+        var mapSheet = Svc.Data.GetExcelSheet<Map>();
+        var territorySheet = Svc.Data.GetExcelSheet<TerritoryType>();
         var levels = new Dictionary<uint, NpcLevel>(wanted.Count);
         for (var rowIndex = 0; rowIndex < levelSheet.Count; rowIndex++)
         {
             var level = levelSheet.GetRowAt(rowIndex);
-            if (level.Type != LevelTypeNpc || !wanted.Contains(level.Object.RowId))
+            if (level.Type != LevelTypeNpc || !wanted.Contains(level.Object.RowId)
+                || !TryReadNpcLocation(level, mapSheet, territorySheet, out var location))
             {
                 continue;
             }
 
-            if (!TryReadNpcLocation(level, out var location))
-            {
-                continue;
-            }
-
-            if (!levels.TryAdd(level.Object.RowId, location) && PreferNpcLocation(location, levels[level.Object.RowId]))
+            if (!levels.TryGetValue(level.Object.RowId, out var current) || IsBetterLocation(location, current))
             {
                 levels[level.Object.RowId] = location;
             }
@@ -372,31 +364,27 @@ internal static class TriadDataLoader
         return levels;
     }
 
-    private static bool TryReadNpcLocation(Level level, out NpcLevel location)
+    private static bool TryReadNpcLocation(Level level, Lumina.Excel.ExcelSheet<Map> mapSheet, Lumina.Excel.ExcelSheet<TerritoryType> territorySheet,
+        out NpcLevel location)
     {
         location = default;
-        if (level.Map.RowId == 0 || Svc.Data.GetExcelSheet<Map>().GetRowOrDefault(level.Map.RowId) is not { } map
-            || map.SizeFactor == 0 || !float.IsFinite(level.X) || !float.IsFinite(level.Y) || !float.IsFinite(level.Z))
+        if (level.Map.RowId == 0 || mapSheet.GetRowOrDefault(level.Map.RowId) is not { SizeFactor: not 0 } map
+            || !float.IsFinite(level.X) || !float.IsFinite(level.Y) || !float.IsFinite(level.Z))
         {
             return false;
         }
 
         var territoryId = level.Territory.RowId != 0 ? level.Territory.RowId : map.TerritoryType.RowId;
-        if (territoryId == 0 || Svc.Data.GetExcelSheet<TerritoryType>().GetRowOrDefault(territoryId) is not { IsInUse: true })
+        if (territoryId == 0 || territorySheet.GetRowOrDefault(territoryId) is not { IsInUse: true })
         {
             return false;
         }
 
-        location = new NpcLevel(new Vector3(level.X, level.Y, level.Z), level.Map.RowId, territoryId);
+        location = new NpcLevel(new Vector3(level.X, level.Y, level.Z), level.Map.RowId, territoryId, map.IsEvent);
         return true;
     }
 
-    private static bool PreferNpcLocation(NpcLevel candidate, NpcLevel current)
-    {
-        // IsEvent also marks accessible interiors such as Fortemps Manor, so retain those as a fallback.
-        var maps = Svc.Data.GetExcelSheet<Map>();
-        return maps.GetRow(current.MapId).IsEvent && !maps.GetRow(candidate.MapId).IsEvent;
-    }
+    private static bool IsBetterLocation(NpcLevel candidate, NpcLevel current) => current.OnEventMap && !candidate.OnEventMap;
 
     private static void BuildDropIndex(int cardSlots, TriadNpc[] npcs, ushort[] rewards, out int[] dropStart, out ushort[] dropNpcs)
     {
