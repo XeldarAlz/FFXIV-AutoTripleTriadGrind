@@ -34,6 +34,7 @@ internal static unsafe class TriadDialog
     {
         Nothing,
         Handled,
+        ChoseChallenge,
         UnknownMenu,
     }
 
@@ -97,13 +98,14 @@ internal static unsafe class TriadDialog
             return Step.UnknownMenu;
         }
 
-        if (EzThrottler.Throttle(MenuThrottleKey, ClickThrottleMs))
+        if (!EzThrottler.Throttle(MenuThrottleKey, ClickThrottleMs))
         {
-            RunLog.Info($"Choosing menu entry {index} ({EntryText(menu, isIconMenu, index)}).");
-            Callback.Fire(menu, true, index);
+            return Step.Handled;
         }
 
-        return Step.Handled;
+        RunLog.Info($"Choosing menu entry {index} ({EntryText(menu, isIconMenu, index)}).");
+        Callback.Fire(menu, true, index);
+        return Step.ChoseChallenge;
     }
 
     private static Step SelectLastEntry(AtkUnitBase* menu, bool isIconMenu)

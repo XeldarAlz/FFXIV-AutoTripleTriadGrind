@@ -108,7 +108,7 @@ public abstract partial class AutoCommon
             }
 
             // A Triple Triad prompt, such as the fee confirmation, can sit between Challenge and the deck window.
-            if (TriadDialog.Advance() != TriadDialog.Step.Handled)
+            if (TriadDialog.Advance() is TriadDialog.Step.Nothing or TriadDialog.Step.UnknownMenu)
             {
                 TriadMatchOps.ClickChallenge();
             }

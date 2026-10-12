@@ -21,6 +21,13 @@ internal enum NpcRunEnd : byte
 
 internal readonly record struct NpcRunResult(NpcRunEnd End, SkipReason Reason);
 
+internal enum ChallengeAttempt : byte
+{
+    Opened,
+    Failed,
+    Declined,
+}
+
 // Per-NPC state that must not outlive the NPC: the deck in play, the screen tracker and the streak counters.
 internal sealed class TriadNpcRun(ushort npcIndex, Func<TriadNpcRun, bool> goalMet)
 {
@@ -56,12 +63,21 @@ public abstract partial class AutoCommon
     private const int MaxInteractFailures = 6;
     private const int ChallengeOpenTimeoutMs = 15_000;
     private const int DialogSettleTimeoutMs = 8_000;
+    private const int DialogQuietMs = 2_000;
+    private const int MaxDeclinedChallenges = 3;
     private const int MaxFailedSeries = 3;
 
     // Card items that would not register this run, so each is tried once rather than before every match.
     private readonly HashSet<uint> unregistrableItems = [];
 
     internal async Task<NpcRunResult> PlayNpc(TriadNpcRun run, AutoTriadSession session, TriadProgress progress)
+    {
+        var result = await PlayNpcUntilDone(run, session, progress);
+        await SettleDialog();
+        return result;
+    }
+
+    private async Task<NpcRunResult> PlayNpcUntilDone(TriadNpcRun run, AutoTriadSession session, TriadProgress progress)
     {
         var configuration = Plugin.Instance.Configuration;
         progress.BeginNpc(run.NpcIndex);
@@ -82,13 +98,11 @@ public abstract partial class AutoCommon
             TriadOwnership.Refresh(force: true);
             if (run.GoalMet(run))
             {
-                await LeaveMatchWindows();
                 return new NpcRunResult(NpcRunEnd.GoalMet, SkipReason.None);
             }
 
             if (Stop(configuration, run) is { } limit)
             {
-                await LeaveMatchWindows();
                 return new NpcRunResult(NpcRunEnd.Skipped, limit);
             }
 
@@ -105,7 +119,13 @@ public abstract partial class AutoCommon
             }
 
             progress.SetPhase(TriadPhase.Challenging);
-            if (!await OpenChallenge(run))
+            var challenge = await OpenChallenge(run);
+            if (challenge == ChallengeAttempt.Declined)
+            {
+                return new NpcRunResult(NpcRunEnd.Skipped, SkipReason.Locked);
+            }
+
+            if (challenge == ChallengeAttempt.Failed)
             {
                 run.InteractFailures++;
                 if (run.InteractFailures >= MaxInteractFailures)
@@ -113,7 +133,7 @@ public abstract partial class AutoCommon
                     return new NpcRunResult(NpcRunEnd.Skipped, SkipReason.InteractFailed);
                 }
 
-                await DelayMs(1_000);
+                await SettleDialog();
                 continue;
             }
 
@@ -205,28 +225,45 @@ public abstract partial class AutoCommon
     }
 
     // Talks to the NPC and walks the dialogue until the challenge window opens.
-    private async Task<bool> OpenChallenge(TriadNpcRun run)
+    private async Task<ChallengeAttempt> OpenChallenge(TriadNpcRun run)
     {
         if (TriadAddons.AnyMatchWindowVisible())
         {
-            return true;
+            return ChallengeAttempt.Opened;
         }
 
         var deadline = Environment.TickCount64 + ChallengeOpenTimeoutMs;
         var lastInteract = 0L;
         var approached = false;
+        var challengesChosen = 0;
+        var newConversation = true;
         while (Environment.TickCount64 < deadline && !CancelToken.IsCancellationRequested)
         {
             if (TriadAddons.IsVisible(TriadAddons.Request) || TriadAddons.IsVisible(TriadAddons.DeckSelect))
             {
-                return true;
+                return ChallengeAttempt.Opened;
             }
 
             var step = TriadDialog.Advance();
             if (step == TriadDialog.Step.UnknownMenu)
             {
                 Warn($"{run.Name} opened a menu without a Triple Triad entry.");
-                return false;
+                return ChallengeAttempt.Failed;
+            }
+
+            if (step == TriadDialog.Step.ChoseChallenge && newConversation)
+            {
+                newConversation = false;
+                if (++challengesChosen >= MaxDeclinedChallenges)
+                {
+                    Warn($"{run.Name} turned the challenge down {challengesChosen} times; an unlock requirement is probably not met.");
+                    return ChallengeAttempt.Declined;
+                }
+            }
+
+            if (step == TriadDialog.Step.Nothing)
+            {
+                newConversation = true;
             }
 
             if (step == TriadDialog.Step.Nothing && NpcInteraction.PlayerReady() && Environment.TickCount64 - lastInteract > 1_500
@@ -248,7 +285,7 @@ public abstract partial class AutoCommon
         }
 
         Warn($"The challenge window for {run.Name} did not open.");
-        return false;
+        return ChallengeAttempt.Failed;
     }
 
     private async Task<bool> ApproachToTalk(TriadNpcRun run, IGameObject target)
@@ -278,13 +315,20 @@ public abstract partial class AutoCommon
     private async Task SettleDialog()
     {
         var deadline = Environment.TickCount64 + DialogSettleTimeoutMs;
+        var quietSince = Environment.TickCount64;
         while (Environment.TickCount64 < deadline && !CancelToken.IsCancellationRequested)
         {
+            var now = Environment.TickCount64;
             if (TriadAddons.AnyMatchWindowVisible())
             {
                 TriadMatchOps.CloseOneWindow();
+                quietSince = now;
             }
-            else if (TriadDialog.Advance(towardChallenge: false) == TriadDialog.Step.Nothing)
+            else if (TriadDialog.Advance(towardChallenge: false) != TriadDialog.Step.Nothing)
+            {
+                quietSince = now;
+            }
+            else if (now - quietSince >= DialogQuietMs)
             {
                 return;
             }
