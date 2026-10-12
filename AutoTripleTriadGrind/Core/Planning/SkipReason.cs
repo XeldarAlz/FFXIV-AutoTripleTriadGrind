@@ -12,4 +12,5 @@ public enum SkipReason : byte
     LossStreak,
     MatchLimit,
     InventoryFull,
+    PlayerInBattleHall,
 }

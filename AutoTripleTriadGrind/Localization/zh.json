@@ -116,6 +116,7 @@
   "triad.cardStats": "稀有度{0}  ·  {1} {2} {3} {4}",
   "triad.skip.locked": "未解锁",
   "triad.skip.battleHall": "对战大厅",
+  "triad.skip.leaveBattleHall": "请先离开对战大厅",
   "triad.skip.fee": "费用过高",
   "triad.skip.mgp": "金碟币不足",
   "triad.skip.interact": "无法发起对战",

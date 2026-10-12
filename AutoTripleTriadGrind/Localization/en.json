@@ -116,6 +116,7 @@
   "triad.cardStats": "{0}-star  ·  {1} {2} {3} {4}",
   "triad.skip.locked": "Locked",
   "triad.skip.battleHall": "Battle Hall",
+  "triad.skip.leaveBattleHall": "Leave the Battle Hall",
   "triad.skip.fee": "Fee too high",
   "triad.skip.mgp": "Not enough MGP",
   "triad.skip.interact": "Could not challenge",

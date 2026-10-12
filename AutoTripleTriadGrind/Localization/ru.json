@@ -116,6 +116,7 @@
   "triad.cardStats": "Редкость {0}  ·  {1} {2} {3} {4}",
   "triad.skip.locked": "Заблокировано",
   "triad.skip.battleHall": "Боевой зал",
+  "triad.skip.leaveBattleHall": "Покиньте боевой зал",
   "triad.skip.fee": "Слишком высокий взнос",
   "triad.skip.mgp": "Недостаточно MGP",
   "triad.skip.interact": "Не удалось вызвать",

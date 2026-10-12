@@ -116,6 +116,7 @@
   "triad.cardStats": "Seltenheit {0}  ·  {1} {2} {3} {4}",
   "triad.skip.locked": "Gesperrt",
   "triad.skip.battleHall": "Kampfhalle",
+  "triad.skip.leaveBattleHall": "Kampfhalle verlassen",
   "triad.skip.fee": "Gebühr zu hoch",
   "triad.skip.mgp": "Nicht genug MGP",
   "triad.skip.interact": "Herausforderung fehlgeschlagen",

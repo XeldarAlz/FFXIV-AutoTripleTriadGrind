@@ -116,6 +116,7 @@
   "triad.cardStats": "レア度{0}  ·  {1} {2} {3} {4}",
   "triad.skip.locked": "未開放",
   "triad.skip.battleHall": "バトルホール",
+  "triad.skip.leaveBattleHall": "バトルホールから退出",
   "triad.skip.fee": "参加費が高すぎる",
   "triad.skip.mgp": "MGP不足",
   "triad.skip.interact": "対戦を申し込めませんでした",

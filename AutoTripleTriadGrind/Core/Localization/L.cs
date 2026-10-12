@@ -130,6 +130,7 @@ internal static partial class L
 
         public static readonly LocString SkipLocked = new("triad.skip.locked", "Locked");
         public static readonly LocString SkipBattleHall = new("triad.skip.battleHall", "Battle Hall");
+        public static readonly LocString SkipLeaveBattleHall = new("triad.skip.leaveBattleHall", "Leave the Battle Hall");
         public static readonly LocString SkipFee = new("triad.skip.fee", "Fee too high");
         public static readonly LocString SkipMgp = new("triad.skip.mgp", "Not enough MGP");
         public static readonly LocString SkipInteract = new("triad.skip.interact", "Could not challenge");

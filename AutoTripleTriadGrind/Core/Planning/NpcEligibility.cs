@@ -1,4 +1,5 @@
 using AutoTripleTriadGrind.Core.Triad.Data;
+using ECommons.DalamudServices;
 
 namespace AutoTripleTriadGrind.Core.Planning;
 
@@ -7,9 +8,10 @@ internal static class NpcEligibility
     public static SkipReason Check(int npcIndex, Configuration configuration)
     {
         var npc = TriadData.Set.Npcs[npcIndex];
-        if (npc.TerritoryId == TriadDataLoader.BattleHallTerritoryId)
+        var npcInBattleHall = npc.TerritoryId == TriadDataLoader.BattleHallTerritoryId;
+        if (npcInBattleHall != (Svc.ClientState.TerritoryType == TriadDataLoader.BattleHallTerritoryId))
         {
-            return SkipReason.BattleHall;
+            return npcInBattleHall ? SkipReason.BattleHall : SkipReason.PlayerInBattleHall;
         }
 
         if (configuration.MaxMatchFee > 0 && npc.Fee > configuration.MaxMatchFee)

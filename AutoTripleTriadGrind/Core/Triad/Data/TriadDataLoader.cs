@@ -13,7 +13,7 @@ internal static class TriadDataLoader
     private const int CardRarityRows = 6;
     // ItemUICategory 86 is "Triple Triad Card".
     private const uint TriadCardItemCategory = 86;
-    // The Battle Hall is a Duty Finder instance, so its NPCs cannot be walked to.
+    // The Battle Hall is a Duty Finder instance: its NPCs are only reachable from inside it, and nothing else is.
     public const uint BattleHallTerritoryId = 579;
 
     private static readonly string[] casingExclusions = ["the", "goe", "van", "des", "sas", "yae", "tol", "der", "rem"];

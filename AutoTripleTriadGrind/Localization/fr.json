@@ -116,6 +116,7 @@
   "triad.cardStats": "Rareté {0}  ·  {1} {2} {3} {4}",
   "triad.skip.locked": "Verrouillé",
   "triad.skip.battleHall": "Salle de combat",
+  "triad.skip.leaveBattleHall": "Quittez la salle de combat",
   "triad.skip.fee": "Mise trop élevée",
   "triad.skip.mgp": "Pas assez de PGS",
   "triad.skip.interact": "Défi impossible",

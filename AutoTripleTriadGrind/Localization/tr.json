@@ -116,6 +116,7 @@
   "triad.cardStats": "Nadirlik {0}  ·  {1} {2} {3} {4}",
   "triad.skip.locked": "Kilitli",
   "triad.skip.battleHall": "Savaş Salonu",
+  "triad.skip.leaveBattleHall": "Savaş Salonundan çıkın",
   "triad.skip.fee": "Ücret çok yüksek",
   "triad.skip.mgp": "Yetersiz MGP",
   "triad.skip.interact": "Meydan okunamadı",

@@ -116,6 +116,7 @@
   "triad.cardStats": "Raridade {0}  ·  {1} {2} {3} {4}",
   "triad.skip.locked": "Bloqueado",
   "triad.skip.battleHall": "Salão de Batalha",
+  "triad.skip.leaveBattleHall": "Saia do Salão de Batalha",
   "triad.skip.fee": "Taxa alta demais",
   "triad.skip.mgp": "MGP insuficiente",
   "triad.skip.interact": "Não foi possível desafiar",
