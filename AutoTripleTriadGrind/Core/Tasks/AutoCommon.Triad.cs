@@ -77,6 +77,8 @@ public abstract partial class AutoCommon
 
         while (!CancelToken.IsCancellationRequested)
         {
+            progress.SetPhase(TriadPhase.Registering);
+            await RegisterPendingCards(session);
             TriadOwnership.Refresh(force: true);
             if (run.GoalMet(run))
             {
@@ -90,8 +92,6 @@ public abstract partial class AutoCommon
                 return new NpcRunResult(NpcRunEnd.Skipped, limit);
             }
 
-            progress.SetPhase(TriadPhase.Registering);
-            await RegisterPendingCards(session);
             if (CardRegistrar.FreeBagSlots() < configuration.MinFreeBagSlots)
             {
                 Svc.Chat.PrintError($"{AttgConstants.LogPrefix} Your bags are nearly full, so the run stops. Free a few slots and start again.");
