@@ -48,7 +48,7 @@ internal sealed class TriadNpcRun(ushort npcIndex, Func<TriadNpcRun, bool> goalM
 
 public abstract partial class AutoCommon
 {
-    private const float InteractRangeMeters = 4f;
+    private const float InteractRangeMeters = 6f;
     // Travel counts a stop a couple of metres past its tolerance as arrived, which can leave the NPC out of talking range.
     private const float TalkRangeMeters = 3f;
     private const float TalkApproachToleranceMeters = 1.5f;
@@ -77,6 +77,8 @@ public abstract partial class AutoCommon
 
         while (!CancelToken.IsCancellationRequested)
         {
+            progress.SetPhase(TriadPhase.Registering);
+            await RegisterPendingCards(session);
             TriadOwnership.Refresh(force: true);
             if (run.GoalMet(run))
             {
@@ -90,8 +92,6 @@ public abstract partial class AutoCommon
                 return new NpcRunResult(NpcRunEnd.Skipped, limit);
             }
 
-            progress.SetPhase(TriadPhase.Registering);
-            await RegisterPendingCards(session);
             if (CardRegistrar.FreeBagSlots() < configuration.MinFreeBagSlots)
             {
                 Svc.Chat.PrintError($"{AttgConstants.LogPrefix} Your bags are nearly full, so the run stops. Free a few slots and start again.");
