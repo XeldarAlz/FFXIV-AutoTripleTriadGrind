@@ -141,6 +141,11 @@ public abstract partial class AutoCommon
         }
 
         var ruleMask = TriadDeckBuilder.RuleMask(run.NpcIndex, run.Regional);
+        if (run.Deck is { } current && current.RuleMask == ruleMask)
+        {
+            return WriteDeck(configuration, current);
+        }
+
         if (!TriadDeckBuilder.TryGetCached(configuration, run.NpcIndex, ruleMask, out var deck))
         {
             progress.SetPhase(TriadPhase.Optimizing);
@@ -169,8 +174,12 @@ public abstract partial class AutoCommon
 
         run.DeckRuleMask = ruleMask;
         run.DeckReady = true;
-        return ProfileDecks.TryWrite(configuration.OptimizedDeckSlot, deck.Cards) || WarnFalse("The optimized deck could not be written to the deck slot.");
+        run.Deck = deck;
+        return WriteDeck(configuration, deck);
     }
+
+    private bool WriteDeck(Configuration configuration, CachedDeck deck)
+        => ProfileDecks.TryWrite(configuration.OptimizedDeckSlot, deck.Cards) || WarnFalse("The optimized deck could not be written to the deck slot.");
 
     private async Task<bool> SelectDeck(Configuration configuration)
     {

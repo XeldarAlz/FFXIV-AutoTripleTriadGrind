@@ -43,6 +43,7 @@ internal sealed class TriadNpcRun(ushort npcIndex, Func<TriadNpcRun, bool> goalM
     public int FailedSeries;
     public ushort DeckRuleMask = ushort.MaxValue;
     public bool DeckReady;
+    public CachedDeck? Deck;
     // Zero plays on until the goal is met; Collect sets it from the per-NPC match limit.
     public int MatchLimit;
 
