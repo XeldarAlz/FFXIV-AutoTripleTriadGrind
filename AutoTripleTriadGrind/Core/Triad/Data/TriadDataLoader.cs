@@ -1,5 +1,4 @@
 using ECommons.DalamudServices;
-using AutoTripleTriadGrind.Core.Travel;
 using Lumina.Excel.Sheets;
 using System.Numerics;
 using TriadRuleSheet = Lumina.Excel.Sheets.TripleTriadRule;
@@ -333,8 +332,7 @@ internal static class TriadDataLoader
                 continue;
             }
 
-            var territoryId = CustomTravelRoutes.ResolveTerritoryId(level.Territory.RowId);
-            levels.TryAdd(level.Object.RowId, new NpcLevel(new Vector3(level.X, level.Y, level.Z), level.Map.RowId, territoryId));
+            levels.TryAdd(level.Object.RowId, new NpcLevel(new Vector3(level.X, level.Y, level.Z), level.Map.RowId, level.Territory.RowId));
         }
 
         return levels;
