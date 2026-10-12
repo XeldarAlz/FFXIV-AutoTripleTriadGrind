@@ -60,6 +60,7 @@ internal static class TriadLabels
         SkipReason.LossStreak         => Loc.T(L.Triad.SkipLossStreak),
         SkipReason.MatchLimit         => Loc.T(L.Triad.SkipMatchLimit),
         SkipReason.InventoryFull      => Loc.T(L.Triad.SkipInventory),
+        SkipReason.SkippedByYou       => Loc.T(L.Triad.SkipByYou),
         _                             => Loc.T(L.Triad.SkipUnreachable),
     };
 

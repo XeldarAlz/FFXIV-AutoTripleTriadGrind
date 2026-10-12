@@ -13,4 +13,5 @@ public enum SkipReason : byte
     MatchLimit,
     InventoryFull,
     PlayerInBattleHall,
+    SkippedByYou,
 }

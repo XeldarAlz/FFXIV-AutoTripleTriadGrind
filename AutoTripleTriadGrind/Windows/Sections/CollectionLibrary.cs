@@ -19,6 +19,7 @@ internal static class CollectionLibrary
     private const float SummaryRowHeight = 32f;
     private const float NpcRowHeight = 62f;
     private const float NpcRowGap = 6f;
+    private const string NpcMenuId = "##attg_collection_npc_menu";
     private const float CardSize = 40f;
     private const float CardGap = 5f;
     private const float CardTileWidth = 250f;
@@ -207,6 +208,8 @@ internal static class CollectionLibrary
             }
         }
 
+        NpcSkipMenu.Draw(NpcMenuId, configuration);
+
         if (!drawnAny)
         {
             TextDraw.Hint(search.Length > 0 ? Loc.T(L.Common.NoMatches, search) : Loc.T(L.Collection.NothingHere));
@@ -351,6 +354,7 @@ internal static class CollectionLibrary
         }
 
         ImGui.PopID();
+        NpcSkipMenu.OpenOnRightClick(NpcMenuId, set.Npcs[npcIndex].TriadRowId, origin, end, editable);
         ImGui.SetCursorScreenPos(origin);
         ImGui.Dummy(size);
     }
@@ -554,6 +558,7 @@ internal static class CollectionLibrary
             }
 
             Tooltip.Text(Loc.T(L.Collection.TooltipSelectNpc), Styling.TextMuted);
+            Tooltip.Text(Loc.T(L.Collection.TooltipSkipNpc), Styling.TextMuted);
         }
     }
 

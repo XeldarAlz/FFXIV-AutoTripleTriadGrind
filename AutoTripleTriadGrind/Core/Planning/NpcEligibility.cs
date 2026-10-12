@@ -8,6 +8,11 @@ internal static class NpcEligibility
     public static SkipReason Check(int npcIndex, Configuration configuration)
     {
         var npc = TriadData.Set.Npcs[npcIndex];
+        if (configuration.SkippedNpcs.Contains(npc.TriadRowId))
+        {
+            return SkipReason.SkippedByYou;
+        }
+
         var npcInBattleHall = npc.TerritoryId == TriadDataLoader.BattleHallTerritoryId;
         if (npcInBattleHall != (Svc.ClientState.TerritoryType == TriadDataLoader.BattleHallTerritoryId))
         {
