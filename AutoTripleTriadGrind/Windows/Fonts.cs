@@ -1,5 +1,7 @@
 using AutoTripleTriadGrind.Core;
 using AutoTripleTriadGrind.Core.Localization;
+using AutoTripleTriadGrind.Core.Travel;
+using AutoTripleTriadGrind.Core.Triad.Data;
 using Dalamud;
 using Dalamud.Interface;
 using Dalamud.Interface.ManagedFontAtlas;
@@ -78,6 +80,7 @@ internal static class Fonts
         iconLarge = IconHandle(IconLargeScale);
         iconDisplay = IconHandle(IconDisplayScale);
         uiBuilder.DefaultFontChanged += Rebuild;
+        TriadData.DataLoaded += Rebuild;
 
         if (atlas.AutoRebuildMode == FontAtlasAutoRebuildMode.Disable)
         {
@@ -93,6 +96,8 @@ internal static class Fonts
         {
             builder.DefaultFontChanged -= Rebuild;
         }
+
+        TriadData.DataLoaded -= Rebuild;
 
         body?.Dispose();
         title?.Dispose();
@@ -211,6 +216,7 @@ internal static class Fonts
         GlyphRanges.MarkRanges(extra, Loc.Current.ExtraGlyphRanges);
         GlyphRanges.MarkRanges(extra, Loc.CatalogGlyphRanges);
         MarkNativeNames(extra);
+        MarkGameNames(extra);
 
         for (var codepoint = GlyphRanges.FirstNonAsciiCodepoint; codepoint < GlyphRanges.CodepointCount; codepoint++)
         {
@@ -243,6 +249,29 @@ internal static class Fonts
         for (var languageIndex = 0; languageIndex < languages.Length; languageIndex++)
         {
             GlyphRanges.MarkText(extra, languages[languageIndex].NativeName);
+        }
+    }
+
+    private static void MarkGameNames(bool[] extra)
+    {
+        var data = TriadData.Set;
+        MarkTexts(extra, data.NpcNames);
+        MarkTexts(extra, data.NpcUnlockQuestNames);
+        MarkTexts(extra, data.CardNames);
+        MarkTexts(extra, data.RuleNames);
+
+        var npcs = data.Npcs;
+        for (var npcIndex = 0; npcIndex < npcs.Length; npcIndex++)
+        {
+            GlyphRanges.MarkText(extra, TerritoryNames.Of(npcs[npcIndex].TerritoryId));
+        }
+    }
+
+    private static void MarkTexts(bool[] extra, string[] texts)
+    {
+        for (var textIndex = 0; textIndex < texts.Length; textIndex++)
+        {
+            GlyphRanges.MarkText(extra, texts[textIndex]);
         }
     }
 
