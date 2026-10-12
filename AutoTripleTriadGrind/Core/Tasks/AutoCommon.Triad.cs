@@ -40,6 +40,7 @@ internal sealed class TriadNpcRun(ushort npcIndex, Func<TriadNpcRun, bool> goalM
     public int Matches;
     public int LossStreak;
     public int InteractFailures;
+    public int RefusedChallenges;
     public int FailedSeries;
     public ushort DeckRuleMask = ushort.MaxValue;
     public bool DeckReady;
@@ -65,20 +66,13 @@ public abstract partial class AutoCommon
     private const int ChallengeOpenTimeoutMs = 15_000;
     private const int DialogSettleTimeoutMs = 8_000;
     private const int DialogQuietMs = 2_000;
-    private const int MaxDeclinedChallenges = 3;
+    private const int MaxRefusedChallenges = 3;
     private const int MaxFailedSeries = 3;
 
     // Card items that would not register this run, so each is tried once rather than before every match.
     private readonly HashSet<uint> unregistrableItems = [];
 
     internal async Task<NpcRunResult> PlayNpc(TriadNpcRun run, AutoTriadSession session, TriadProgress progress)
-    {
-        var result = await PlayNpcUntilDone(run, session, progress);
-        await SettleDialog();
-        return result;
-    }
-
-    private async Task<NpcRunResult> PlayNpcUntilDone(TriadNpcRun run, AutoTriadSession session, TriadProgress progress)
     {
         var configuration = Plugin.Instance.Configuration;
         progress.BeginNpc(run.NpcIndex);
@@ -123,22 +117,24 @@ public abstract partial class AutoCommon
             var challenge = await OpenChallenge(run);
             if (challenge == ChallengeAttempt.Declined)
             {
+                await SettleDialog();
                 return new NpcRunResult(NpcRunEnd.Skipped, SkipReason.Locked);
             }
 
             if (challenge == ChallengeAttempt.Failed)
             {
+                await SettleDialog();
                 run.InteractFailures++;
                 if (run.InteractFailures >= MaxInteractFailures)
                 {
                     return new NpcRunResult(NpcRunEnd.Skipped, SkipReason.InteractFailed);
                 }
 
-                await SettleDialog();
                 continue;
             }
 
             run.InteractFailures = 0;
+            run.RefusedChallenges = 0;
             var matchesBefore = run.Matches;
             var leave = await PlayMatchSeries(configuration, run, session, progress);
             await SettleDialog();
@@ -236,8 +232,7 @@ public abstract partial class AutoCommon
         var deadline = Environment.TickCount64 + ChallengeOpenTimeoutMs;
         var lastInteract = 0L;
         var approached = false;
-        var challengesChosen = 0;
-        var newConversation = true;
+        var awaitingAnswer = false;
         while (Environment.TickCount64 < deadline && !CancelToken.IsCancellationRequested)
         {
             if (TriadAddons.IsVisible(TriadAddons.Request) || TriadAddons.IsVisible(TriadAddons.DeckSelect))
@@ -252,19 +247,19 @@ public abstract partial class AutoCommon
                 return ChallengeAttempt.Failed;
             }
 
-            if (step == TriadDialog.Step.ChoseChallenge && newConversation)
+            if (step == TriadDialog.Step.ChoseChallenge)
             {
-                newConversation = false;
-                if (++challengesChosen >= MaxDeclinedChallenges)
-                {
-                    Warn($"{run.Name} turned the challenge down {challengesChosen} times; an unlock requirement is probably not met.");
-                    return ChallengeAttempt.Declined;
-                }
+                awaitingAnswer = true;
             }
 
-            if (step == TriadDialog.Step.Nothing)
+            if (step == TriadDialog.Step.Nothing && awaitingAnswer && NpcInteraction.PlayerReady())
             {
-                newConversation = true;
+                awaitingAnswer = false;
+                if (++run.RefusedChallenges >= MaxRefusedChallenges)
+                {
+                    Warn($"{run.Name} turned the challenge down {run.RefusedChallenges} times; an unlock requirement is probably not met.");
+                    return ChallengeAttempt.Declined;
+                }
             }
 
             if (step == TriadDialog.Step.Nothing && NpcInteraction.PlayerReady() && Environment.TickCount64 - lastInteract > 1_500
@@ -325,7 +320,7 @@ public abstract partial class AutoCommon
                 TriadMatchOps.CloseOneWindow();
                 quietSince = now;
             }
-            else if (TriadDialog.Advance(towardChallenge: false) != TriadDialog.Step.Nothing)
+            else if (TriadDialog.Advance(towardChallenge: false) == TriadDialog.Step.Handled)
             {
                 quietSince = now;
             }
@@ -338,7 +333,7 @@ public abstract partial class AutoCommon
         }
     }
 
-    private async Task RegisterPendingCards(AutoTriadSession session)
+    private protected async Task RegisterPendingCards(AutoTriadSession session)
     {
         for (var attempt = 0; attempt < 20 && !CancelToken.IsCancellationRequested; attempt++)
         {

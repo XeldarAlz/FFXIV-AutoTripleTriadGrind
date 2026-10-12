@@ -335,6 +335,7 @@
   "collection.tooltip.lockedAnyQuest": "Gesperrt: Schließe eine dieser Quests ab, um diesen NPC freizuschalten: {0}",
   "collection.tooltip.selectNpc": "Klicke, um alle Karten dieses NPCs, die dir fehlen, zu wählen oder abzuwählen.",
   "collection.tooltip.skipNpc": "Rechtsklick, um diesen NPC in jedem Durchlauf zu überspringen.",
+  "collection.tooltip.unskipNpc": "Rechtsklick, um diesen NPC wieder zu spielen.",
   "collection.tooltip.owned": "Im Besitz",
   "collection.tooltip.selected": "Gewählt. Klicke, um sie aus dem Plan zu entfernen.",
   "collection.tooltip.missing": "Fehlt. Klicke, um sie zu wählen.",

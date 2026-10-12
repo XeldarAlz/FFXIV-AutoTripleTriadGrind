@@ -335,6 +335,7 @@
   "collection.tooltip.lockedAnyQuest": "Kilitli: bu NPC'yi açmak için şu görevlerden birini tamamlayın: {0}",
   "collection.tooltip.selectNpc": "Bu NPC'den eksik olan tüm kartları seçmek ya da bırakmak için tıklayın.",
   "collection.tooltip.skipNpc": "Bu NPC'yi her oturumda atlamak için sağ tıklayın.",
+  "collection.tooltip.unskipNpc": "Bu NPC ile yeniden oynamak için sağ tıklayın.",
   "collection.tooltip.owned": "Sahip olunan",
   "collection.tooltip.selected": "Seçili. Plandan çıkarmak için tıklayın.",
   "collection.tooltip.missing": "Eksik. Seçmek için tıklayın.",

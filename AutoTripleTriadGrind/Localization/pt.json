@@ -335,6 +335,7 @@
   "collection.tooltip.lockedAnyQuest": "Bloqueado: conclua uma destas missões para liberar este NPC: {0}",
   "collection.tooltip.selectNpc": "Clique para escolher ou remover todas as cartas que faltam deste NPC.",
   "collection.tooltip.skipNpc": "Clique com o botão direito para ignorar este NPC em todas as sessões.",
+  "collection.tooltip.unskipNpc": "Clique com o botão direito para voltar a jogar contra este NPC.",
   "collection.tooltip.owned": "Obtida",
   "collection.tooltip.selected": "Escolhida. Clique para remover do plano.",
   "collection.tooltip.missing": "Faltando. Clique para escolher.",

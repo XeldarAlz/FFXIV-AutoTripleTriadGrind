@@ -342,7 +342,7 @@ internal static class CollectionLibrary
 
         if (rowHit.Hovered)
         {
-            DrawNpcTooltip(npcIndex, eligibility);
+            DrawNpcTooltip(configuration, npcIndex, eligibility);
         }
 
         var cardY = midY - CardSize * scale * 0.5f;
@@ -529,7 +529,7 @@ internal static class CollectionLibrary
         }
     }
 
-    private static void DrawNpcTooltip(int npcIndex, SkipReason eligibility)
+    private static void DrawNpcTooltip(Configuration configuration, int npcIndex, SkipReason eligibility)
     {
         var set = TriadData.Set;
         var npc = set.Npcs[npcIndex];
@@ -558,7 +558,8 @@ internal static class CollectionLibrary
             }
 
             Tooltip.Text(Loc.T(L.Collection.TooltipSelectNpc), Styling.TextMuted);
-            Tooltip.Text(Loc.T(L.Collection.TooltipSkipNpc), Styling.TextMuted);
+            var skipped = configuration.SkippedNpcs.Contains(TriadData.Set.Npcs[npcIndex].TriadRowId);
+            Tooltip.Text(Loc.T(skipped ? L.Collection.TooltipUnskipNpc : L.Collection.TooltipSkipNpc), Styling.TextMuted);
         }
     }
 
@@ -593,7 +594,7 @@ internal static class CollectionLibrary
             choices.Append(names[nameIndex]);
         }
 
-        return Loc.T(L.Collection.TooltipLockedAnyQuest, choices.ToString());
+        return choices.Length == 0 ? string.Empty : Loc.T(L.Collection.TooltipLockedAnyQuest, choices.ToString());
     }
 
     private static void DrawCardTooltip(ushort cardId, bool owned, bool selected)

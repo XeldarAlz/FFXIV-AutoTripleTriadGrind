@@ -335,6 +335,7 @@
   "collection.tooltip.lockedAnyQuest": "未開放：次のいずれかをクリアするとこのNPCが開放されます：{0}",
   "collection.tooltip.selectNpc": "クリックすると、このNPCの未所持カードをすべて選択または解除します。",
   "collection.tooltip.skipNpc": "右クリックで、このNPCを毎回の周回でスキップします。",
+  "collection.tooltip.unskipNpc": "右クリックで、このNPCとの対戦を再開します。",
   "collection.tooltip.owned": "所持済み",
   "collection.tooltip.selected": "選択中。クリックでプランから外します。",
   "collection.tooltip.missing": "未所持。クリックで選択します。",

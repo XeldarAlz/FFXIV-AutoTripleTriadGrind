@@ -335,6 +335,7 @@
   "collection.tooltip.lockedAnyQuest": "未解锁：完成以下任意一项任务即可解锁此NPC：{0}",
   "collection.tooltip.selectNpc": "点击以选择或取消此NPC处你未拥有的全部幻卡。",
   "collection.tooltip.skipNpc": "右键点击可让每次运行都跳过此NPC。",
+  "collection.tooltip.unskipNpc": "右键点击可重新与此NPC对战。",
   "collection.tooltip.owned": "已拥有",
   "collection.tooltip.selected": "已选择。点击从计划中移除。",
   "collection.tooltip.missing": "未拥有。点击以选择。",

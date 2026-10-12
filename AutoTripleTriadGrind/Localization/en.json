@@ -335,6 +335,7 @@
   "collection.tooltip.lockedAnyQuest": "Locked: complete any one of these quests to unlock this NPC: {0}",
   "collection.tooltip.selectNpc": "Click to pick or drop every card you are missing from this NPC.",
   "collection.tooltip.skipNpc": "Right-click to skip this NPC in every run.",
+  "collection.tooltip.unskipNpc": "Right-click to play this NPC again.",
   "collection.tooltip.owned": "Owned",
   "collection.tooltip.selected": "Picked. Click to drop it from the plan.",
   "collection.tooltip.missing": "Missing. Click to pick it.",

@@ -335,6 +335,7 @@
   "collection.tooltip.lockedAnyQuest": "Verrouillé : terminez l'une de ces quêtes pour débloquer ce PNJ : {0}",
   "collection.tooltip.selectNpc": "Cliquez pour choisir ou retirer toutes les cartes manquantes de ce PNJ.",
   "collection.tooltip.skipNpc": "Clic droit pour ignorer ce PNJ à chaque session.",
+  "collection.tooltip.unskipNpc": "Clic droit pour rejouer contre ce PNJ.",
   "collection.tooltip.owned": "Possédée",
   "collection.tooltip.selected": "Choisie. Cliquez pour la retirer du plan.",
   "collection.tooltip.missing": "Manquante. Cliquez pour la choisir.",

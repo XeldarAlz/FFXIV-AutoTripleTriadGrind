@@ -50,6 +50,8 @@ internal sealed class AutoCollect(AutoTriadSession session, TriadProgress progre
             return;
         }
 
+        progress.SetPhase(TriadPhase.Registering);
+        await RegisterPendingCards(session);
         var configuration = Plugin.Instance.Configuration;
         while (!CancelToken.IsCancellationRequested)
         {

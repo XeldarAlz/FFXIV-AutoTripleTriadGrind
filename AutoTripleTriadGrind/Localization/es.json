@@ -335,6 +335,7 @@
   "collection.tooltip.lockedAnyQuest": "Bloqueado: completa una de estas misiones para desbloquear este PNJ: {0}",
   "collection.tooltip.selectNpc": "Haz clic para elegir o quitar todas las cartas que te faltan de este PNJ.",
   "collection.tooltip.skipNpc": "Haz clic derecho para omitir este PNJ en cada sesión.",
+  "collection.tooltip.unskipNpc": "Haz clic derecho para volver a jugar contra este PNJ.",
   "collection.tooltip.owned": "Obtenida",
   "collection.tooltip.selected": "Elegida. Haz clic para quitarla del plan.",
   "collection.tooltip.missing": "Falta. Haz clic para elegirla.",
