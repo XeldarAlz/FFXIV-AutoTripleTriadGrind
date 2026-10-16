@@ -57,6 +57,20 @@ internal static unsafe class CardRegistrar
         return 0;
     }
 
+    public static bool IsCollected(ushort cardId) => TriadOwnership.IsOwned(cardId) || HoldsCardItem(cardId);
+
+    private static bool HoldsCardItem(ushort cardId)
+    {
+        var itemIds = TriadData.Set.CardItemIds;
+        if (cardId >= itemIds.Length || itemIds[cardId] == 0)
+        {
+            return false;
+        }
+
+        var manager = InventoryManager.Instance();
+        return manager is not null && manager->GetInventoryItemCount(itemIds[cardId], checkEquipped: false, checkArmory: false) > 0;
+    }
+
     public static bool Use(uint itemId)
     {
         var context = AgentInventoryContext.Instance();

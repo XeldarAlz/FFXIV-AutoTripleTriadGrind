@@ -1,3 +1,4 @@
+using AutoTripleTriadGrind.Core.Game.Ops;
 using AutoTripleTriadGrind.Core.Triad.Data;
 using ECommons.GameHelpers;
 using System.Numerics;
@@ -63,7 +64,7 @@ internal static class CollectPlanner
         for (var index = 0; index < cardIds.Length; index++)
         {
             var cardId = cardIds[index];
-            if (configuration.SelectedCards.Contains(cardId) && set.IsNpcReward(cardId) && !TriadOwnership.IsOwned(cardId))
+            if (configuration.SelectedCards.Contains(cardId) && set.IsNpcReward(cardId) && !CardRegistrar.IsCollected(cardId))
             {
                 wanted.Add(cardId);
             }

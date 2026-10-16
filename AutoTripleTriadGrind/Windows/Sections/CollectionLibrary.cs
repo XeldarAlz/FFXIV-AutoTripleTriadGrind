@@ -8,6 +8,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using System.Numerics;
+using System.Text;
 
 namespace AutoTripleTriadGrind.Windows.Sections;
 
@@ -18,6 +19,7 @@ internal static class CollectionLibrary
     private const float SummaryRowHeight = 32f;
     private const float NpcRowHeight = 62f;
     private const float NpcRowGap = 6f;
+    private const string NpcMenuId = "##attg_collection_npc_menu";
     private const float CardSize = 40f;
     private const float CardGap = 5f;
     private const float CardTileWidth = 250f;
@@ -206,6 +208,8 @@ internal static class CollectionLibrary
             }
         }
 
+        NpcSkipMenu.Draw(NpcMenuId, configuration);
+
         if (!drawnAny)
         {
             TextDraw.Hint(search.Length > 0 ? Loc.T(L.Common.NoMatches, search) : Loc.T(L.Collection.NothingHere));
@@ -338,7 +342,7 @@ internal static class CollectionLibrary
 
         if (rowHit.Hovered)
         {
-            DrawNpcTooltip(npcIndex, eligibility);
+            DrawNpcTooltip(configuration, npcIndex, eligibility);
         }
 
         var cardY = midY - CardSize * scale * 0.5f;
@@ -350,6 +354,7 @@ internal static class CollectionLibrary
         }
 
         ImGui.PopID();
+        NpcSkipMenu.OpenOnRightClick(NpcMenuId, set.Npcs[npcIndex].TriadRowId, origin, end, editable);
         ImGui.SetCursorScreenPos(origin);
         ImGui.Dummy(size);
     }
@@ -524,7 +529,7 @@ internal static class CollectionLibrary
         }
     }
 
-    private static void DrawNpcTooltip(int npcIndex, SkipReason eligibility)
+    private static void DrawNpcTooltip(Configuration configuration, int npcIndex, SkipReason eligibility)
     {
         var set = TriadData.Set;
         var npc = set.Npcs[npcIndex];
@@ -543,9 +548,9 @@ internal static class CollectionLibrary
                 Tooltip.Text(Loc.T(L.Collection.TooltipRegional), Styling.TextDim);
             }
 
-            if (eligibility == SkipReason.Locked && set.NpcUnlockQuestNames[npcIndex].Length > 0)
+            if (eligibility == SkipReason.Locked && LockedQuestText(npcIndex) is { Length: > 0 } lockedQuest)
             {
-                Tooltip.Text(Loc.T(L.Collection.TooltipLockedQuest, set.NpcUnlockQuestNames[npcIndex]), Styling.AccentAmber);
+                Tooltip.Text(lockedQuest, Styling.AccentAmber);
             }
             else if (eligibility != SkipReason.None)
             {
@@ -553,7 +558,43 @@ internal static class CollectionLibrary
             }
 
             Tooltip.Text(Loc.T(L.Collection.TooltipSelectNpc), Styling.TextMuted);
+            var skipped = configuration.SkippedNpcs.Contains(TriadData.Set.Npcs[npcIndex].TriadRowId);
+            Tooltip.Text(Loc.T(skipped ? L.Collection.TooltipUnskipNpc : L.Collection.TooltipSkipNpc), Styling.TextMuted);
         }
+    }
+
+    private static string LockedQuestText(int npcIndex)
+    {
+        var slot = TriadUnlock.MissingQuestSlot(npcIndex);
+        if (slot == TriadUnlock.NoMissingQuest)
+        {
+            return string.Empty;
+        }
+
+        var set = TriadData.Set;
+        var names = set.UnlockQuestNamesOf(npcIndex);
+        if (!set.Npcs[npcIndex].UnlockNeedsAnyQuest)
+        {
+            return names[slot].Length == 0 ? string.Empty : Loc.T(L.Collection.TooltipLockedQuest, names[slot]);
+        }
+
+        var choices = new StringBuilder();
+        for (var nameIndex = 0; nameIndex < names.Length; nameIndex++)
+        {
+            if (names[nameIndex].Length == 0)
+            {
+                continue;
+            }
+
+            if (choices.Length > 0)
+            {
+                choices.Append(" / ");
+            }
+
+            choices.Append(names[nameIndex]);
+        }
+
+        return choices.Length == 0 ? string.Empty : Loc.T(L.Collection.TooltipLockedAnyQuest, choices.ToString());
     }
 
     private static void DrawCardTooltip(ushort cardId, bool owned, bool selected)

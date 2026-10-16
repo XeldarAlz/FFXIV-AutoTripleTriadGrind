@@ -9,6 +9,8 @@ internal static class AttgConstants
 
     public const int SaveThrottleMs = 500;
 
+    public static readonly int BackgroundWorkerThreads = Math.Max(1, Environment.ProcessorCount / 4);
+
     internal static class ThrottleKeys
     {
         public const string Save = "AutoTripleTriadGrind.Save";

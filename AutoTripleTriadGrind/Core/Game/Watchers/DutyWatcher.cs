@@ -1,4 +1,5 @@
 using AutoTripleTriadGrind.Core.Tasks;
+using AutoTripleTriadGrind.Core.Triad.Data;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
@@ -54,7 +55,8 @@ internal sealed class DutyWatcher : IDisposable
     }
 
     private static bool InContent()
-        => Svc.Condition[ConditionFlag.BoundByDuty]
-        || Svc.Condition[ConditionFlag.BoundByDuty56]
-        || Svc.Condition[ConditionFlag.BoundByDuty95];
+        => Svc.ClientState.TerritoryType != TriadDataLoader.BattleHallTerritoryId
+        && (Svc.Condition[ConditionFlag.BoundByDuty]
+            || Svc.Condition[ConditionFlag.BoundByDuty56]
+            || Svc.Condition[ConditionFlag.BoundByDuty95]);
 }

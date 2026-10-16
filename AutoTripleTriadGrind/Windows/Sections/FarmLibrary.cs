@@ -13,6 +13,7 @@ internal static class FarmLibrary
 {
     private const float RowHeight = 52f;
     private const float RowGap = 6f;
+    private const string NpcMenuId = "##attg_farm_npc_menu";
     private const float SelectorRadius = 9f;
     private const float StopRowHeight = 40f;
     private const float SearchWidth = 240f;
@@ -63,6 +64,8 @@ internal static class FarmLibrary
                 ImGui.Dummy(new Vector2(0f, RowGap * scale - ImGui.GetStyle().ItemSpacing.Y));
             }
         }
+
+        NpcSkipMenu.Draw(NpcMenuId, configuration);
 
         if (!drawnAny)
         {
@@ -196,6 +199,7 @@ internal static class FarmLibrary
             TextDraw.At(TextDraw.Truncate(TriadLabels.NpcLocation(npcIndex), textRight - textX), new Vector2(textX, midY + 2f * scale), Styling.TextMuted);
         }
 
+        NpcSkipMenu.OpenOnRightClick(NpcMenuId, npc.TriadRowId, origin, end, editable);
         ImGui.SetCursorScreenPos(origin);
         ImGui.Dummy(size);
     }

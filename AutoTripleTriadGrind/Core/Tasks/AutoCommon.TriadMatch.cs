@@ -56,7 +56,8 @@ public abstract partial class AutoCommon
             run.LossStreak = outcome == MatchOutcome.Lost ? run.LossStreak + 1 : 0;
             session.RecordMatch(outcome);
             progress.RecordNpcMatch(outcome);
-            var newCard = TriadData.Set.CardIdByItemId.TryGetValue(rewardItem, out var cardId) && !TriadOwnership.IsOwned(cardId);
+            var newCard = TriadData.Set.CardIdByItemId.TryGetValue(rewardItem, out var cardId) && !TriadOwnership.IsOwned(cardId)
+                && !unregistrableItems.Contains(rewardItem);
             Diag($"{run.Name}: match {run.Matches} {outcome}, reward item {rewardItem}{(newCard ? $" ({TriadData.Set.CardName(cardId)}, new)" : string.Empty)}.");
             if (newCard)
             {
@@ -108,7 +109,7 @@ public abstract partial class AutoCommon
             }
 
             // A Triple Triad prompt, such as the fee confirmation, can sit between Challenge and the deck window.
-            if (TriadDialog.Advance() != TriadDialog.Step.Handled)
+            if (TriadDialog.Advance() is TriadDialog.Step.Nothing or TriadDialog.Step.UnknownMenu)
             {
                 TriadMatchOps.ClickChallenge();
             }
@@ -141,6 +142,11 @@ public abstract partial class AutoCommon
         }
 
         var ruleMask = TriadDeckBuilder.RuleMask(run.NpcIndex, run.Regional);
+        if (run.Deck is { } current && current.RuleMask == ruleMask)
+        {
+            return WriteDeck(configuration, current);
+        }
+
         if (!TriadDeckBuilder.TryGetCached(configuration, run.NpcIndex, ruleMask, out var deck))
         {
             progress.SetPhase(TriadPhase.Optimizing);
@@ -169,8 +175,12 @@ public abstract partial class AutoCommon
 
         run.DeckRuleMask = ruleMask;
         run.DeckReady = true;
-        return ProfileDecks.TryWrite(configuration.OptimizedDeckSlot, deck.Cards) || WarnFalse("The optimized deck could not be written to the deck slot.");
+        run.Deck = deck;
+        return WriteDeck(configuration, deck);
     }
+
+    private bool WriteDeck(Configuration configuration, CachedDeck deck)
+        => ProfileDecks.TryWrite(configuration.OptimizedDeckSlot, deck.Cards) || WarnFalse("The optimized deck could not be written to the deck slot.");
 
     private async Task<bool> SelectDeck(Configuration configuration)
     {
@@ -200,7 +210,7 @@ public abstract partial class AutoCommon
     // The solver runs off the game thread; the board is only read, and a card only played, on the framework thread.
     private async Task<bool> PlayBoard(TriadNpcRun run)
     {
-        TriadRolloutAgent.MaxParallelism = Math.Max(1, Environment.ProcessorCount / 4);
+        TriadRolloutAgent.MaxParallelism = AttgConstants.BackgroundWorkerThreads;
         var memory = run.Memory;
         var screen = run.Screen;
         Task<(bool Found, int Card, int Cell)>? solving = null;
