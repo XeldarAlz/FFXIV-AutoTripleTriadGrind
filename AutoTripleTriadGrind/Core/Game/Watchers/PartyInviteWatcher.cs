@@ -280,7 +280,7 @@ internal sealed unsafe class PartyInviteWatcher : IDisposable
         try
         {
             var master = new AddonMaster.SelectYesno((nint)addon);
-            var text = master.Addon->PromptText is not null ? master.Text : master.TextLegacy;
+            var text = master.Addon->PromptText is not null ? master.Text : master.SeStringNullTerminated.GetText();
             return PromptTemplate.Normalize(text).Trim();
         }
         catch (Exception exception)

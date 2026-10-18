@@ -7,6 +7,7 @@ public sealed partial class Configuration
     public HashSet<ushort> SelectedCards { get; set; } = [];
 
     public List<uint> FarmNpcs { get; set; } = [];
+    public HashSet<uint> SkippedNpcs { get; set; } = [];
     public FarmStopKind FarmStop { get; set; } = FarmStopKind.Matches;
     public int FarmMatchLimit { get; set; } = 50;
 

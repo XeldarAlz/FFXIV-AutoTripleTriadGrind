@@ -24,7 +24,7 @@ internal static partial class L
         public static readonly LocString TimeoutHelp = new("deck.timeoutHelp", "How long the optimizer may search for a deck. The best deck found so far is used when time runs out.");
         public static readonly LocString SecondsFormat = new("deck.secondsFormat", "%d s");
         public static readonly LocString Threads = new("deck.threads", "Worker threads");
-        public static readonly LocString ThreadsHelp = new("deck.threadsHelp", "How many CPU threads the optimizer may use. Auto leaves one core free for the game.");
+        public static readonly LocString ThreadsHelp = new("deck.threadsHelp", "How many CPU threads the optimizer may use. Auto uses a quarter of them so the game keeps running smoothly.");
         public static readonly LocString ThreadsAuto = new("deck.threadsAuto", "Auto");
     }
 

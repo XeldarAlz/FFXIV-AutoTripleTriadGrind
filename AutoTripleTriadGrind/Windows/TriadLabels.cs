@@ -51,15 +51,17 @@ internal static class TriadLabels
 
     public static string Skip(SkipReason reason) => reason switch
     {
-        SkipReason.Locked         => Loc.T(L.Triad.SkipLocked),
-        SkipReason.BattleHall     => Loc.T(L.Triad.SkipBattleHall),
-        SkipReason.FeeTooHigh     => Loc.T(L.Triad.SkipFee),
-        SkipReason.NotEnoughMgp   => Loc.T(L.Triad.SkipMgp),
-        SkipReason.InteractFailed => Loc.T(L.Triad.SkipInteract),
-        SkipReason.LossStreak     => Loc.T(L.Triad.SkipLossStreak),
-        SkipReason.MatchLimit     => Loc.T(L.Triad.SkipMatchLimit),
-        SkipReason.InventoryFull  => Loc.T(L.Triad.SkipInventory),
-        _                         => Loc.T(L.Triad.SkipUnreachable),
+        SkipReason.Locked             => Loc.T(L.Triad.SkipLocked),
+        SkipReason.BattleHall         => Loc.T(L.Triad.SkipBattleHall),
+        SkipReason.PlayerInBattleHall => Loc.T(L.Triad.SkipLeaveBattleHall),
+        SkipReason.FeeTooHigh         => Loc.T(L.Triad.SkipFee),
+        SkipReason.NotEnoughMgp       => Loc.T(L.Triad.SkipMgp),
+        SkipReason.InteractFailed     => Loc.T(L.Triad.SkipInteract),
+        SkipReason.LossStreak         => Loc.T(L.Triad.SkipLossStreak),
+        SkipReason.MatchLimit         => Loc.T(L.Triad.SkipMatchLimit),
+        SkipReason.InventoryFull      => Loc.T(L.Triad.SkipInventory),
+        SkipReason.SkippedByYou       => Loc.T(L.Triad.SkipByYou),
+        _                             => Loc.T(L.Triad.SkipUnreachable),
     };
 
     private static void EnsureBuilt()

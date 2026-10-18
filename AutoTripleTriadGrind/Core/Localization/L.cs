@@ -130,6 +130,7 @@ internal static partial class L
 
         public static readonly LocString SkipLocked = new("triad.skip.locked", "Locked");
         public static readonly LocString SkipBattleHall = new("triad.skip.battleHall", "Battle Hall");
+        public static readonly LocString SkipLeaveBattleHall = new("triad.skip.leaveBattleHall", "Leave the Battle Hall");
         public static readonly LocString SkipFee = new("triad.skip.fee", "Fee too high");
         public static readonly LocString SkipMgp = new("triad.skip.mgp", "Not enough MGP");
         public static readonly LocString SkipInteract = new("triad.skip.interact", "Could not challenge");
@@ -137,6 +138,9 @@ internal static partial class L
         public static readonly LocString SkipMatchLimit = new("triad.skip.matchLimit", "Match limit reached");
         public static readonly LocString SkipInventory = new("triad.skip.inventory", "Inventory full");
         public static readonly LocString SkipUnreachable = new("triad.skip.unreachable", "Unreachable");
+        public static readonly LocString SkipByYou = new("triad.skip.byYou", "Skipped");
+        public static readonly LocString SkipNpcAlways = new("triad.npcMenu.skip", "Skip this NPC in every run");
+        public static readonly LocString PlayNpcAgain = new("triad.npcMenu.playAgain", "Play this NPC again");
     }
 
     internal static class Run
@@ -259,6 +263,28 @@ internal static partial class L
         public static readonly LocString Latest = new("changelog.latest", "Latest");
         public static readonly LocString New = new("changelog.new", "New");
         public static readonly LocPlural Changes = new("changelog.changes", "{0} change", "{0} changes");
+
+        public static readonly LocString[] Release1210 =
+        [
+            new("changelog.r1210.1", "Added an entry route into Terncliff, so the NPCs there can be played. Contributed by lizvik"),
+        ];
+
+        public static readonly LocString[] Release1200 =
+        [
+            new("changelog.r1200.1", "Added entry routes into Fortemps Manor, Gangos and Lower Jeuno, so the NPCs there can be played. Contributed by lizvik"),
+            new("changelog.r1200.2", "The Battle Hall NPCs can now be played while you are inside the Battle Hall"),
+            new("changelog.r1200.3", "Added a right-click option to skip an NPC in every run"),
+            new("changelog.r1200.4", "Fixed an issue where the run kept challenging an NPC after winning its last card, even when the card could not be registered. Contributed by lizvik"),
+            new("changelog.r1200.5", "Fixed an issue where an NPC's menu stayed open after a match and blocked teleporting to the next NPC"),
+            new("changelog.r1200.6", "NPCs that turn the challenge down are now skipped within seconds instead of being retried for a minute and a half"),
+            new("changelog.r1200.7", "Fixed NPCs that accept any one of several unlock quests showing as locked, and some locked NPCs showing as unlocked"),
+            new("changelog.r1200.8", "Fixed an issue where the Triple Triad challenge was never chosen on the Japanese client"),
+            new("changelog.r1200.9", "Fixed missing characters in NPC and zone names on Chinese clients. Contributed by lizvik"),
+            new("changelog.r1200.10", "Fixed some NPCs being looked for on the wrong map. Contributed by lizvik"),
+            new("changelog.r1200.11", "Fixed NPCs whose path ends a few metres short being reported as unreachable. Contributed by lizvik"),
+            new("changelog.r1200.12", "The optimized deck is now built once per NPC instead of again after every card won from it"),
+            new("changelog.r1200.13", "The deck optimizer now uses a quarter of your CPU threads by default, keeping the game smooth"),
+        ];
 
         public static readonly LocString[] Release1110 =
         [

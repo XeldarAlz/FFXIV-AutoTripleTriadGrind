@@ -19,7 +19,10 @@ internal static partial class L
         public static readonly LocString TooltipRules = new("collection.tooltip.rules", "Rules: {0}");
         public static readonly LocString TooltipRegional = new("collection.tooltip.regional", "Also plays the regional rules of its area.");
         public static readonly LocString TooltipLockedQuest = new("collection.tooltip.lockedQuest", "Locked: complete “{0}” to unlock this NPC.");
+        public static readonly LocString TooltipLockedAnyQuest = new("collection.tooltip.lockedAnyQuest", "Locked: complete any one of these quests to unlock this NPC: {0}");
         public static readonly LocString TooltipSelectNpc = new("collection.tooltip.selectNpc", "Click to pick or drop every card you are missing from this NPC.");
+        public static readonly LocString TooltipSkipNpc = new("collection.tooltip.skipNpc", "Right-click to skip this NPC in every run.");
+        public static readonly LocString TooltipUnskipNpc = new("collection.tooltip.unskipNpc", "Right-click to play this NPC again.");
         public static readonly LocString TooltipOwned = new("collection.tooltip.owned", "Owned");
         public static readonly LocString TooltipSelected = new("collection.tooltip.selected", "Picked. Click to drop it from the plan.");
         public static readonly LocString TooltipMissing = new("collection.tooltip.missing", "Missing. Click to pick it.");

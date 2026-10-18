@@ -44,6 +44,7 @@ internal sealed class TriadDataSet
 
     public TriadNpc[] Npcs { get; init; } = [];
     public string[] NpcNames { get; init; } = [];
+    public uint[] NpcUnlockQuests { get; init; } = [];
     public string[] NpcUnlockQuestNames { get; init; } = [];
     public ushort[] NpcDeckCards { get; init; } = [];
     public ushort[] NpcRewardCards { get; init; } = [];
@@ -61,6 +62,10 @@ internal sealed class TriadDataSet
     public int NpcCount => Npcs.Length;
 
     public bool IsCard(int cardId) => cardId > 0 && cardId < Cards.Length && Cards[cardId].IsValid;
+
+    public ReadOnlySpan<uint> UnlockQuestsOf(int npcIndex) => NpcUnlockQuests.AsSpan(npcIndex * TriadNpc.UnlockQuestSlots, TriadNpc.UnlockQuestSlots);
+
+    public ReadOnlySpan<string> UnlockQuestNamesOf(int npcIndex) => NpcUnlockQuestNames.AsSpan(npcIndex * TriadNpc.UnlockQuestSlots, TriadNpc.UnlockQuestSlots);
 
     public ReadOnlySpan<ushort> RewardsOf(int npcIndex)
     {

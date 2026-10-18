@@ -9,11 +9,12 @@ namespace AutoTripleTriadGrind.Core.Triad.Data;
 internal static class TriadDataLoader
 {
     private const byte LevelTypeNpc = 8;
+    private const byte PreviousQuestJoinAny = 2;
     private const int CardTypeRows = 5;
     private const int CardRarityRows = 6;
     // ItemUICategory 86 is "Triple Triad Card".
     private const uint TriadCardItemCategory = 86;
-    // The Battle Hall is a Duty Finder instance, so its NPCs cannot be walked to.
+    // The Battle Hall is a Duty Finder instance: its NPCs are only reachable from inside it, and nothing else is.
     public const uint BattleHallTerritoryId = 579;
 
     private static readonly string[] casingExclusions = ["the", "goe", "van", "des", "sas", "yae", "tol", "der", "rem"];
@@ -64,10 +65,11 @@ internal static class TriadDataLoader
         var cardIdByItemId = ReadCardItems(cards, cardItemIds);
         var npcs = new List<TriadNpc>();
         var npcNames = new List<string>();
+        var unlockQuests = new List<uint>();
         var questNames = new List<string>();
         var deckCards = new List<ushort>();
         var rewardCards = new List<ushort>();
-        ReadNpcs(cards, cardIdByItemId, npcs, npcNames, questNames, deckCards, rewardCards);
+        ReadNpcs(cards, cardIdByItemId, npcs, npcNames, unlockQuests, questNames, deckCards, rewardCards);
 
         var npcArray = npcs.ToArray();
         var npcIndexByRow = new Dictionary<uint, ushort>(npcArray.Length);
@@ -87,6 +89,7 @@ internal static class TriadDataLoader
             CardIdsInOrder = SortedCardIds(cards),
             Npcs = npcArray,
             NpcNames = npcNames.ToArray(),
+            NpcUnlockQuests = unlockQuests.ToArray(),
             NpcUnlockQuestNames = questNames.ToArray(),
             NpcDeckCards = deckCards.ToArray(),
             NpcRewardCards = rewardArray,
@@ -171,7 +174,7 @@ internal static class TriadDataLoader
     }
 
     private static void ReadNpcs(TriadCard[] cards, Dictionary<uint, ushort> cardIdByItemId, List<TriadNpc> npcs, List<string> names,
-        List<string> questNames, List<ushort> deckCards, List<ushort> rewardCards)
+        List<uint> unlockQuests, List<string> questNames, List<ushort> deckCards, List<ushort> rewardCards)
     {
         var triadSheet = Svc.Data.GetExcelSheet<TriadSheet>();
         var candidates = FindTriadENpcs(triadSheet);
@@ -220,16 +223,11 @@ internal static class TriadDataLoader
                 }
             }
 
-            uint unlockQuestId = 0;
-            for (var questIndex = 0; questIndex < row.PreviousQuest.Count; questIndex++)
+            for (var questSlot = 0; questSlot < TriadNpc.UnlockQuestSlots; questSlot++)
             {
-                if (row.PreviousQuest[questIndex].RowId == 0)
-                {
-                    continue;
-                }
-
-                unlockQuestId = row.PreviousQuest[questIndex].RowId;
-                break;
+                var questId = questSlot < row.PreviousQuest.Count ? row.PreviousQuest[questSlot].RowId : 0;
+                unlockQuests.Add(questId);
+                questNames.Add(questId == 0 ? string.Empty : questSheet.GetRowOrDefault(questId)?.Name.ExtractText().Trim() ?? string.Empty);
             }
 
             var map = mapSheet.GetRowOrDefault(level.MapId);
@@ -238,10 +236,9 @@ internal static class TriadDataLoader
                 : new Vector2(ToMapCoordinate(level.Position.X, map.Value.SizeFactor, map.Value.OffsetX), ToMapCoordinate(level.Position.Z, map.Value.SizeFactor, map.Value.OffsetY));
             var expansion = (byte)(territorySheet.GetRowOrDefault(level.TerritoryId)?.ExVersion.RowId ?? 0);
 
-            npcs.Add(new TriadNpc(row.RowId, eNpcId, level.TerritoryId, level.MapId, level.Position, mapCoordinates, unlockQuestId, row.Fee,
+            npcs.Add(new TriadNpc(row.RowId, eNpcId, level.TerritoryId, level.MapId, level.Position, mapCoordinates, row.PreviousQuestJoin == PreviousQuestJoinAny, row.Fee,
                 ruleMask, row.UsesRegionalRules, expansion, cardStart, (byte)fixedCount, (byte)variableCount, rewardStart, (byte)(rewardCards.Count - rewardStart)));
             names.Add(FixNameCasing(residentSheet.GetRowOrDefault(eNpcId)?.Singular.ExtractText() ?? $"NPC {eNpcId}"));
-            questNames.Add(unlockQuestId == 0 ? string.Empty : questSheet.GetRowOrDefault(unlockQuestId)?.Name.ExtractText() ?? string.Empty);
         }
     }
 
