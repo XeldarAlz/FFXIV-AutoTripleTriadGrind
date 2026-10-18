@@ -3,6 +3,7 @@ using AutoTripleTriadGrind.Core.Localization;
 using AutoTripleTriadGrind.Core.Travel;
 using AutoTripleTriadGrind.Core.Triad.Data;
 using Dalamud;
+using Dalamud.Game.Text;
 using Dalamud.Interface;
 using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility;
@@ -46,6 +47,9 @@ internal static class Fonts
         0x2190, 0x21FF,
         0x2200, 0x22FF,
     ];
+
+    private const ushort QuestSyncGlyph = (ushort)SeIconChar.QuestSync;
+    private static readonly ushort[] QuestSyncRange = [QuestSyncGlyph, QuestSyncGlyph, 0];
 
     private static readonly NoOpScope noOp = new();
 
@@ -175,6 +179,14 @@ internal static class Fonts
                 : tk.AddDalamudDefaultFont(sizePx, latinRanges);
             tk.Font = primary;
 
+            // Quest names contain this game icon as U+E0BE; text fonts cannot draw it on their own.
+            tk.AddDalamudAssetFont(DalamudAsset.LodestoneGameSymbol, new SafeFontConfig
+            {
+                SizePx = sizePx,
+                GlyphRanges = QuestSyncRange,
+                MergeFont = primary,
+            });
+
             if (mergeRanges.Length <= 1)
             {
                 return;
@@ -220,7 +232,7 @@ internal static class Fonts
 
         for (var codepoint = GlyphRanges.FirstNonAsciiCodepoint; codepoint < GlyphRanges.CodepointCount; codepoint++)
         {
-            if (latin[codepoint] || !extra[codepoint])
+            if (latin[codepoint] || !extra[codepoint] || codepoint == QuestSyncGlyph)
             {
                 continue;
             }
