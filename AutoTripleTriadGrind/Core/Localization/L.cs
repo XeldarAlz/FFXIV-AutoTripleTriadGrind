@@ -139,6 +139,7 @@ internal static partial class L
         public static readonly LocString SkipInventory = new("triad.skip.inventory", "Inventory full");
         public static readonly LocString SkipUnreachable = new("triad.skip.unreachable", "Unreachable");
         public static readonly LocString SkipByYou = new("triad.skip.byYou", "Skipped");
+        public static readonly LocString SkipQuestOffered = new("triad.skip.questOffered", "Quest in the way");
         public static readonly LocString SkipNpcAlways = new("triad.npcMenu.skip", "Skip this NPC in every run");
         public static readonly LocString PlayNpcAgain = new("triad.npcMenu.playAgain", "Play this NPC again");
     }

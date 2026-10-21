@@ -125,6 +125,7 @@
   "triad.skip.inventory": "Inventory full",
   "triad.skip.unreachable": "Unreachable",
   "triad.skip.byYou": "Skipped",
+  "triad.skip.questOffered": "Quest in the way",
   "triad.npcMenu.skip": "Skip this NPC in every run",
   "triad.npcMenu.playAgain": "Play this NPC again",
   "run.phase.registering": "Registering cards",

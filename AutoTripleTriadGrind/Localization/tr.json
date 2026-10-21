@@ -125,6 +125,7 @@
   "triad.skip.inventory": "Envanter dolu",
   "triad.skip.unreachable": "Ulaşılamıyor",
   "triad.skip.byYou": "Atlanıyor",
+  "triad.skip.questOffered": "Görev engelliyor",
   "triad.npcMenu.skip": "Bu NPC'yi her oturumda atla",
   "triad.npcMenu.playAgain": "Bu NPC ile yeniden oyna",
   "run.phase.registering": "Kartlar kaydediliyor",

@@ -125,6 +125,7 @@
   "triad.skip.inventory": "所持品がいっぱい",
   "triad.skip.unreachable": "到達不可",
   "triad.skip.byYou": "スキップ中",
+  "triad.skip.questOffered": "クエスト受注が必要",
   "triad.npcMenu.skip": "このNPCを毎回の周回でスキップ",
   "triad.npcMenu.playAgain": "このNPCとの対戦を再開",
   "run.phase.registering": "カードを登録中",

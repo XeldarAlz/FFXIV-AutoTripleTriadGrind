@@ -125,6 +125,7 @@
   "triad.skip.inventory": "Inventar voll",
   "triad.skip.unreachable": "Nicht erreichbar",
   "triad.skip.byYou": "Übersprungen",
+  "triad.skip.questOffered": "Quest im Weg",
   "triad.npcMenu.skip": "Diesen NPC in jedem Durchlauf überspringen",
   "triad.npcMenu.playAgain": "Diesen NPC wieder spielen",
   "run.phase.registering": "Karten registrieren",

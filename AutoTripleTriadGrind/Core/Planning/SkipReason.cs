@@ -14,4 +14,5 @@ public enum SkipReason : byte
     InventoryFull,
     PlayerInBattleHall,
     SkippedByYou,
+    QuestOffered,
 }

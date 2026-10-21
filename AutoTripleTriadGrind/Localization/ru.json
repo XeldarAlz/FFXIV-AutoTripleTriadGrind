@@ -125,6 +125,7 @@
   "triad.skip.inventory": "Инвентарь полон",
   "triad.skip.unreachable": "Недоступен",
   "triad.skip.byYou": "Пропущен",
+  "triad.skip.questOffered": "Мешает задание",
   "triad.npcMenu.skip": "Пропускать этого NPC в каждом запуске",
   "triad.npcMenu.playAgain": "Снова играть с этим NPC",
   "run.phase.registering": "Регистрация карт",

@@ -125,6 +125,7 @@
   "triad.skip.inventory": "Inventaire plein",
   "triad.skip.unreachable": "Inaccessible",
   "triad.skip.byYou": "Ignoré",
+  "triad.skip.questOffered": "Bloqué par une quête",
   "triad.npcMenu.skip": "Ignorer ce PNJ à chaque session",
   "triad.npcMenu.playAgain": "Rejouer contre ce PNJ",
   "run.phase.registering": "Enregistrement des cartes",

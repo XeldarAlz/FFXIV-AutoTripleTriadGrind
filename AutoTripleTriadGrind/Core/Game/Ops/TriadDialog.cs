@@ -17,11 +17,13 @@ internal static unsafe class TriadDialog
     private const string SelectStringAddon = "SelectString";
     private const string SelectIconStringAddon = "SelectIconString";
     private const string SelectYesnoAddon = "SelectYesno";
+    private const string JournalAcceptAddon = "JournalAccept";
     private const uint MenuListNodeId = 3;
     private const int ClickThrottleMs = 400;
     private const string TalkThrottleKey = "ATTG.Triad.Talk";
     private const string MenuThrottleKey = "ATTG.Triad.Menu";
     private const string YesnoThrottleKey = "ATTG.Triad.Yesno";
+    private const string QuestThrottleKey = "ATTG.Triad.Quest";
     private const uint TriadChallengeAddonRowId = 9184;
 
     // Map icons the menu shows beside the Triple Triad entry.
@@ -36,11 +38,23 @@ internal static unsafe class TriadDialog
         Handled,
         ChoseChallenge,
         UnknownMenu,
+        QuestOffered,
     }
 
     // Toward the challenge the menus pick Triple Triad; otherwise they are backed out of with their last entry.
     public static Step Advance(bool towardChallenge = true)
     {
+        // An NPC with a quest for the player offers it in place of the challenge, so the offer is declined either way.
+        if (TryGetReady(JournalAcceptAddon, out var questOffer))
+        {
+            if (EzThrottler.Throttle(QuestThrottleKey, ClickThrottleMs))
+            {
+                DeclineQuest(questOffer);
+            }
+
+            return Step.QuestOffered;
+        }
+
         if (TryGetReady(SelectYesnoAddon, out var yesno))
         {
             if (!IsOwnedByTriad(yesno))
@@ -89,6 +103,20 @@ internal static unsafe class TriadDialog
 
     public static bool AnyOpen()
         => TryGetReady(TalkAddon, out _) || TryGetReady(SelectStringAddon, out _) || TryGetReady(SelectIconStringAddon, out _) || TryGetReady(SelectYesnoAddon, out _);
+
+    private static void DeclineQuest(AtkUnitBase* questOffer)
+    {
+        RunLog.Info("Declining the quest offered in place of the challenge.");
+        var offer = new AddonMaster.JournalAccept(questOffer);
+        // Clicking a button the window no longer has would read a null pointer; closing the window declines as well.
+        if (offer.DeclineButton is null)
+        {
+            questOffer->Close(true);
+            return;
+        }
+
+        offer.Decline();
+    }
 
     private static Step SelectTriadEntry(AtkUnitBase* menu, bool isIconMenu)
     {

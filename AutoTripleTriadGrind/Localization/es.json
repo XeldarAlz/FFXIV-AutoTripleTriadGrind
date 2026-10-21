@@ -125,6 +125,7 @@
   "triad.skip.inventory": "Inventario lleno",
   "triad.skip.unreachable": "Inalcanzable",
   "triad.skip.byYou": "Omitido",
+  "triad.skip.questOffered": "Bloqueado por una misión",
   "triad.npcMenu.skip": "Omitir este PNJ en cada sesión",
   "triad.npcMenu.playAgain": "Volver a jugar contra este PNJ",
   "run.phase.registering": "Registrando cartas",

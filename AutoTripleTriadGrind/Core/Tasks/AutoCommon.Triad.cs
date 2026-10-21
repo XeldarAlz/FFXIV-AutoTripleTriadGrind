@@ -26,6 +26,7 @@ internal enum ChallengeAttempt : byte
     Opened,
     Failed,
     Declined,
+    QuestOffered,
 }
 
 // Per-NPC state that must not outlive the NPC: the deck in play, the screen tracker and the streak counters.
@@ -118,6 +119,12 @@ public abstract partial class AutoCommon
             {
                 await SettleDialog();
                 return new NpcRunResult(NpcRunEnd.Skipped, SkipReason.Locked);
+            }
+
+            if (challenge == ChallengeAttempt.QuestOffered)
+            {
+                await SettleDialog();
+                return new NpcRunResult(NpcRunEnd.Skipped, SkipReason.QuestOffered);
             }
 
             if (challenge == ChallengeAttempt.Failed)
@@ -239,6 +246,12 @@ public abstract partial class AutoCommon
             }
 
             var step = TriadDialog.Advance();
+            if (step == TriadDialog.Step.QuestOffered)
+            {
+                Warn($"{run.Name} offered a quest instead of the challenge; they will not play until it is accepted.");
+                return ChallengeAttempt.QuestOffered;
+            }
+
             if (step == TriadDialog.Step.UnknownMenu)
             {
                 Warn($"{run.Name} opened a menu without a Triple Triad entry.");
@@ -318,7 +331,7 @@ public abstract partial class AutoCommon
                 TriadMatchOps.CloseOneWindow();
                 quietSince = now;
             }
-            else if (TriadDialog.Advance(towardChallenge: false) == TriadDialog.Step.Handled)
+            else if (TriadDialog.Advance(towardChallenge: false) is TriadDialog.Step.Handled or TriadDialog.Step.QuestOffered)
             {
                 quietSince = now;
             }

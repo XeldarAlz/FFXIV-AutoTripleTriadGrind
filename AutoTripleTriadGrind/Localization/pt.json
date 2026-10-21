@@ -125,6 +125,7 @@
   "triad.skip.inventory": "Inventário cheio",
   "triad.skip.unreachable": "Inalcançável",
   "triad.skip.byYou": "Ignorado",
+  "triad.skip.questOffered": "Bloqueado por uma missão",
   "triad.npcMenu.skip": "Ignorar este NPC em todas as sessões",
   "triad.npcMenu.playAgain": "Voltar a jogar contra este NPC",
   "run.phase.registering": "Registrando cartas",

@@ -125,6 +125,7 @@
   "triad.skip.inventory": "背包已满",
   "triad.skip.unreachable": "无法到达",
   "triad.skip.byYou": "已跳过",
+  "triad.skip.questOffered": "需先接受任务",
   "triad.npcMenu.skip": "每次运行都跳过此NPC",
   "triad.npcMenu.playAgain": "重新与此NPC对战",
   "run.phase.registering": "登记幻卡",
