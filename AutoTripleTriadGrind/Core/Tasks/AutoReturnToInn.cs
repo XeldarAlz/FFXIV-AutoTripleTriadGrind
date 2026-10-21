@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AutoTripleTriadGrind.Core.Tasks;
 
-public sealed class AutoReturnToInn : AutoCommon
+public sealed class AutoReturnToInn(string postRunCommands) : AutoCommon
 {
     private const float InnkeeperArrivalMeters = 3.5f;
     private const float InnkeeperReachMeters = 5f;
@@ -21,8 +21,16 @@ public sealed class AutoReturnToInn : AutoCommon
     private const int DialogPollMs = 250;
     private const int InteractRetryMs = 500;
 
+    private readonly string postRunCommands = postRunCommands;
+
     protected override async Task Execute()
     {
+        await SendPostRunCommandsWhenSafe();
+        if (CancelToken.IsCancellationRequested)
+        {
+            return;
+        }
+
         var inn = GrandCompanyInns.ForPlayer();
         var cityName = TerritoryNames.Of(inn.CityTerritoryId);
         Diag($"Return to inn: {cityName} ({inn.CityTerritoryId}), innkeeper {inn.InnkeeperBaseId}, inn room territory {inn.InnTerritoryId}.");
@@ -57,6 +65,25 @@ public sealed class AutoReturnToInn : AutoCommon
         finally
         {
             NavmeshIPC.Instance.Stop();
+        }
+    }
+
+    private async Task SendPostRunCommandsWhenSafe()
+    {
+        if (string.IsNullOrWhiteSpace(postRunCommands))
+        {
+            return;
+        }
+
+        if (await WaitUntilSafeToFinish("inn-commands-ready"))
+        {
+            await SendPostRunCommands(postRunCommands);
+            return;
+        }
+
+        if (!CancelToken.IsCancellationRequested)
+        {
+            Warn($"Return to inn: chat commands skipped, no safe moment (combat, casting, or a zone change) within {AfterRunReadyWaitMs / TimeUnits.MillisecondsPerSecond}s.");
         }
     }
 

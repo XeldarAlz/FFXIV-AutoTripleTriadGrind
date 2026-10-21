@@ -58,22 +58,24 @@ internal sealed partial class AutoTriadController
         }
 
         ending.AfterActionDispatched = true;
-        var action = Plugin.Instance.Configuration.AfterRun;
-        if (action == AfterRunAction.StayLoggedIn)
+        var configuration = Plugin.Instance.Configuration;
+        var action = configuration.AfterRun;
+        var postRunCommands = configuration.PostRunCommands;
+        if (action == AfterRunAction.StayLoggedIn && string.IsNullOrWhiteSpace(postRunCommands))
         {
-            Diag("Run completed by its stop condition; the after-run action is StayLoggedIn, nothing to do.");
+            Diag("Run completed by its stop condition; the after-run action is StayLoggedIn and no chat commands are set, nothing to do.");
             return false;
         }
 
         if (ending.DidNothing)
         {
-            Diag($"Run ended by its stop condition without doing any work; skipping after-run action {action}.");
+            Diag($"Run ended by its stop condition without doing any work; skipping chat commands and after-run action {action}.");
             return false;
         }
 
-        Diag($"Run completed by its stop condition; starting after-run action {action}.");
+        Diag($"Run completed by its stop condition; starting chat commands and after-run action {action}.");
         progress.SetPhase(TriadPhase.Finishing);
-        AutoCommon task = action == AfterRunAction.ReturnToInn ? new AutoReturnToInn() : new AutoAfterRun(action);
+        AutoCommon task = action == AfterRunAction.ReturnToInn ? new AutoReturnToInn(postRunCommands) : new AutoAfterRun(action, postRunCommands);
         RunTask(task, () =>
         {
             Diag($"After-run action {action} finished.");
