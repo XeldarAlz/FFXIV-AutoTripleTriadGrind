@@ -150,12 +150,7 @@ public abstract partial class AutoCommon
         if (!TriadDeckBuilder.TryGetCached(configuration, run.NpcIndex, ruleMask, out var deck))
         {
             progress.SetPhase(TriadPhase.Optimizing);
-            if (ruleMask != run.DeckRuleMask || !TriadDeckBuilder.IsBuilding)
-            {
-                run.DeckRuleMask = ruleMask;
-                TriadDeckBuilder.Start(configuration, run.NpcIndex, ruleMask);
-            }
-
+            TriadDeckBuilder.Start(configuration, run.NpcIndex, ruleMask);
             while (!CancelToken.IsCancellationRequested)
             {
                 progress.SetOptimizerProgress(TriadDeckBuilder.Progress);
@@ -173,7 +168,6 @@ public abstract partial class AutoCommon
             }
         }
 
-        run.DeckRuleMask = ruleMask;
         run.DeckReady = true;
         run.Deck = deck;
         return WriteDeck(configuration, deck);

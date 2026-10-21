@@ -42,7 +42,6 @@ internal sealed class TriadNpcRun(ushort npcIndex, Func<TriadNpcRun, bool> goalM
     public int InteractFailures;
     public int RefusedChallenges;
     public int FailedSeries;
-    public ushort DeckRuleMask = ushort.MaxValue;
     public bool DeckReady;
     public CachedDeck? Deck;
     // Zero plays on until the goal is met; Collect sets it from the per-NPC match limit.
@@ -186,7 +185,6 @@ public abstract partial class AutoCommon
         }
 
         var ruleMask = TriadDeckBuilder.RuleMask(run.NpcIndex, run.Regional);
-        run.DeckRuleMask = ruleMask;
         if (TriadDeckBuilder.TryGetCached(configuration, run.NpcIndex, ruleMask, out _))
         {
             run.DeckReady = true;

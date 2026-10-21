@@ -12,6 +12,7 @@
     <Compile Include="..\AutoTripleTriadGrind\Core\Triad\Data\TriadCard.cs" Link="Data\TriadCard.cs" />
     <Compile Include="..\AutoTripleTriadGrind\Core\Triad\Data\TriadCardType.cs" Link="Data\TriadCardType.cs" />
     <Compile Include="..\AutoTripleTriadGrind\Core\Triad\Data\TriadRuleId.cs" Link="Data\TriadRuleId.cs" />
+    <Compile Include="..\AutoTripleTriadGrind\Core\Triad\Decks\DeckBuildReuse.cs" Link="Decks\DeckBuildReuse.cs" />
   </ItemGroup>
 
   <ItemGroup>

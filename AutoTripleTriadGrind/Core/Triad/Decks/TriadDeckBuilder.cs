@@ -64,7 +64,7 @@ internal static class TriadDeckBuilder
     public static void Start(Configuration configuration, int npcIndex, ushort ruleMask)
     {
         var rowId = TriadData.Set.Npcs[npcIndex].TriadRowId;
-        if (IsBuilding && buildingFor == rowId && buildingRules == ruleMask)
+        if (DeckBuildReuse.Serves(build, buildingFor, buildingRules, rowId, ruleMask))
         {
             return;
         }
