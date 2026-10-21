@@ -238,6 +238,8 @@
   "changelog.new": "Neu",
   "changelog.changes.one": "{0} Änderung",
   "changelog.changes.other": "{0} Änderungen",
+  "changelog.r1220.1": "Ein Problem wurde behoben, bei dem lange Sitzungen mit einem Absturz oder einem nicht mehr funktionierenden Start-Knopf endeten; Bewegungen richten nicht mehr jedes Mal neue Spiel-Hooks ein",
+  "changelog.r1220.2": "Fehlendes Stufensynchronisations-Symbol vor stufensynchronisierten Questnamen in den Freischaltungshinweisen der NPCs behoben. Beigetragen von lizvik",
   "changelog.r1210.1": "Eingangsroute nach Terncliff hinzugefügt, damit die NPCs dort gespielt werden können. Beigetragen von lizvik",
   "changelog.r1200.1": "Eingangsrouten nach Fortemps Manor, Gangos und Lower Jeuno hinzugefügt, damit die NPCs dort gespielt werden können. Beigetragen von lizvik",
   "changelog.r1200.2": "Die NPCs der Kampfhalle können jetzt gespielt werden, während du dich in der Kampfhalle befindest",

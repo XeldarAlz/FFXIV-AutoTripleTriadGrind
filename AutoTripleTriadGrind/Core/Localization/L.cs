@@ -264,6 +264,12 @@ internal static partial class L
         public static readonly LocString New = new("changelog.new", "New");
         public static readonly LocPlural Changes = new("changelog.changes", "{0} change", "{0} changes");
 
+        public static readonly LocString[] Release1220 =
+        [
+            new("changelog.r1220.1", "Fixed long sessions ending in a crash or a Start button that stops working; moving around no longer sets up new game hooks each time"),
+            new("changelog.r1220.2", "Fixed the quest level sync icon not showing before level-synced quest names in NPC unlock hints. Contributed by lizvik"),
+        ];
+
         public static readonly LocString[] Release1210 =
         [
             new("changelog.r1210.1", "Added an entry route into Terncliff, so the NPCs there can be played. Contributed by lizvik"),

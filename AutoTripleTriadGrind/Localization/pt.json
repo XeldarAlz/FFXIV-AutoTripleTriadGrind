@@ -238,6 +238,8 @@
   "changelog.new": "Novo",
   "changelog.changes.one": "{0} mudança",
   "changelog.changes.other": "{0} mudanças",
+  "changelog.r1220.1": "Corrigido um problema em que sessões longas terminavam em um travamento ou com o botão Iniciar parando de funcionar; mover-se não cria mais novos hooks do jogo a cada vez",
+  "changelog.r1220.2": "Corrigido o ícone de sincronização de nível ausente antes dos nomes de missões com nível sincronizado nas dicas de desbloqueio de NPCs. Contribuição de lizvik",
   "changelog.r1210.1": "Adicionada uma rota de entrada para Terncliff, permitindo jogar contra os NPCs de lá. Contribuição de lizvik",
   "changelog.r1200.1": "Adicionadas rotas de entrada para Fortemps Manor, Gangos e Lower Jeuno, permitindo jogar contra os NPCs de lá. Contribuição de lizvik",
   "changelog.r1200.2": "Agora é possível jogar contra os NPCs do Salão de Batalha enquanto você estiver nele",

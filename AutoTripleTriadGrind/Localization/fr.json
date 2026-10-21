@@ -238,6 +238,8 @@
   "changelog.new": "Nouveau",
   "changelog.changes.one": "{0} changement",
   "changelog.changes.other": "{0} changements",
+  "changelog.r1220.1": "Correction d'un problème où les longues sessions se terminaient par un plantage ou par un bouton Démarrer qui ne répondait plus ; les déplacements n'installent plus de nouveaux hooks du jeu à chaque fois",
+  "changelog.r1220.2": "Correction de l'icône de synchronisation de niveau absente devant les noms de quêtes à niveau synchronisé dans les indications de déblocage des PNJ. Contribution de lizvik",
   "changelog.r1210.1": "Ajout d'un itinéraire d'entrée vers Terncliff pour pouvoir affronter ses PNJ. Contribution de lizvik",
   "changelog.r1200.1": "Ajout d'itinéraires d'entrée vers Fortemps Manor, Gangos et Lower Jeuno pour pouvoir affronter leurs PNJ. Contribution de lizvik",
   "changelog.r1200.2": "Les PNJ de la salle de combat peuvent désormais être affrontés lorsque vous vous y trouvez",

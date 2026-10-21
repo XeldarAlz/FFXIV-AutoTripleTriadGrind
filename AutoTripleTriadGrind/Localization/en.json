@@ -238,6 +238,8 @@
   "changelog.new": "New",
   "changelog.changes.one": "{0} change",
   "changelog.changes.other": "{0} changes",
+  "changelog.r1220.1": "Fixed long sessions ending in a crash or a Start button that stops working; moving around no longer sets up new game hooks each time",
+  "changelog.r1220.2": "Fixed the quest level sync icon not showing before level-synced quest names in NPC unlock hints. Contributed by lizvik",
   "changelog.r1210.1": "Added an entry route into Terncliff, so the NPCs there can be played. Contributed by lizvik",
   "changelog.r1200.1": "Added entry routes into Fortemps Manor, Gangos and Lower Jeuno, so the NPCs there can be played. Contributed by lizvik",
   "changelog.r1200.2": "The Battle Hall NPCs can now be played while you are inside the Battle Hall",

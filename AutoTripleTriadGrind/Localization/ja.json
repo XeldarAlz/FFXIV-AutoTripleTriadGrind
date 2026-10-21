@@ -238,6 +238,8 @@
   "changelog.new": "新着",
   "changelog.changes.one": "{0}件の変更",
   "changelog.changes.other": "{0}件の変更",
+  "changelog.r1220.1": "長時間のセッションでクラッシュしたり、開始ボタンが反応しなくなったりする問題を修正しました。移動のたびに新しいゲームフックを設定しないようになりました",
+  "changelog.r1220.2": "NPCの開放条件ヒントで、レベルシンク対象のクエスト名の前にレベルシンクアイコンが表示されない問題を修正しました。lizvik氏による貢献",
   "changelog.r1210.1": "Terncliffへの入場ルートを追加し、そこにいるNPCと対戦できるようにしました。lizvik氏による貢献",
   "changelog.r1200.1": "Fortemps Manor、Gangos、Lower Jeunoへの入場ルートを追加し、そこにいるNPCと対戦できるようにしました。lizvik氏による貢献",
   "changelog.r1200.2": "バトルホールの中にいる間、バトルホールのNPCと対戦できるようになりました",

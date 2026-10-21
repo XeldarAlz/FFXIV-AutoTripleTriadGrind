@@ -238,6 +238,8 @@
   "changelog.new": "Nuevo",
   "changelog.changes.one": "{0} cambio",
   "changelog.changes.other": "{0} cambios",
+  "changelog.r1220.1": "Se corrigió un problema por el que las sesiones largas terminaban en un cierre inesperado o con el botón Iniciar sin funcionar; desplazarse ya no instala nuevos hooks del juego cada vez",
+  "changelog.r1220.2": "Se corrigió el icono de sincronización de nivel que faltaba delante de los nombres de misiones con nivel sincronizado en las pistas de desbloqueo de PNJ. Contribución de lizvik",
   "changelog.r1210.1": "Se añadió una ruta de entrada a Terncliff para poder jugar contra sus PNJ. Contribución de lizvik",
   "changelog.r1200.1": "Se añadieron rutas de entrada a Fortemps Manor, Gangos y Lower Jeuno para poder jugar contra sus PNJ. Contribución de lizvik",
   "changelog.r1200.2": "Ahora se puede jugar contra los PNJ de la sala de batalla mientras estés dentro de ella",

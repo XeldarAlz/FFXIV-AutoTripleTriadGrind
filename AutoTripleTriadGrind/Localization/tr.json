@@ -238,6 +238,8 @@
   "changelog.new": "Yeni",
   "changelog.changes.one": "{0} değişiklik",
   "changelog.changes.other": "{0} değişiklik",
+  "changelog.r1220.1": "Uzun oturumların çökmeyle ya da çalışmayı bırakan bir Başlat düğmesiyle sonuçlanması sorunu düzeltildi; hareket etmek artık her seferinde yeni oyun kancaları kurmuyor",
+  "changelog.r1220.2": "NPC kilit açma ipuçlarında seviye eşitlemeli görev adlarının önünde seviye eşitleme simgesinin görünmemesi sorunu düzeltildi. Katkı: lizvik",
   "changelog.r1210.1": "Terncliff'e giriş rotası eklendi; oradaki NPC'lerle artık oynanabiliyor. Katkı: lizvik",
   "changelog.r1200.1": "Fortemps Manor, Gangos ve Lower Jeuno'ya giriş rotaları eklendi; oradaki NPC'lerle artık oynanabiliyor. Katkı: lizvik",
   "changelog.r1200.2": "Savaş Salonu'ndayken Savaş Salonu NPC'leriyle artık oynanabiliyor",
