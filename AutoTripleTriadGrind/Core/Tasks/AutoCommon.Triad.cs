@@ -7,7 +7,6 @@ using AutoTripleTriadGrind.Core.Triad.Logic;
 using AutoTripleTriadGrind.Core.Triad.Match;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
-using System.Numerics;
 using System.Threading.Tasks;
 
 namespace AutoTripleTriadGrind.Core.Tasks;
@@ -58,8 +57,6 @@ internal sealed class TriadNpcRun(ushort npcIndex, Func<TriadNpcRun, bool> goalM
 public abstract partial class AutoCommon
 {
     private const float InteractRangeMeters = 6f;
-    // Travel counts a stop a couple of metres past its tolerance as arrived, which can leave the NPC out of talking range.
-    private const float TalkRangeMeters = 3f;
     private const float TalkApproachToleranceMeters = 1.5f;
     private const int TalkApproachWatchdogMs = 10_000;
     private const int MaxInteractFailures = 6;
@@ -295,21 +292,21 @@ public abstract partial class AutoCommon
         return ChallengeAttempt.Failed;
     }
 
+    // Travel counts a stop a couple of metres past its tolerance as arrived, which can leave the NPC out of talking
+    // range. The walk aims at the end of the ground route rather than the NPC: for an NPC behind a counter the
+    // pathfinder appends a straight run from the nearest reachable floor to the NPC, which ends against the counter.
     private async Task<bool> ApproachToTalk(TriadNpcRun run, IGameObject target)
     {
-        if (Svc.Objects.LocalPlayer is not { } player)
+        if (Svc.Objects.LocalPlayer is not { } player || NpcInteraction.CanTalkTo(target))
         {
             return false;
         }
 
-        var distance = Vector3.Distance(player.Position, target.Position);
-        if (distance <= TalkRangeMeters)
-        {
-            return false;
-        }
-
-        Diag($"Walking up to {run.Name}, {distance:F1}m away.");
-        var approach = new MoveOp(move => move.MoveInZone(target.Position, walkMovement.WithTolerance(TalkApproachToleranceMeters), null));
+        var npcPosition = target.Position;
+        var route = await ProbeGroundRoute(player.Position, npcPosition);
+        var standPoint = route.Kind == GroundRouteKind.Unknown ? npcPosition : route.End;
+        Diag($"Walking up to {run.Name}, {DistanceTo(npcPosition):F1}m away, toward {FormatPosition(standPoint)} ({route.Kind} ground route).");
+        var approach = new MoveOp(move => move.MoveInZone(standPoint, walkMovement.WithTolerance(TalkApproachToleranceMeters), () => NpcInteraction.CanTalkTo(target)));
         await RunCancellable(approach, TalkApproachWatchdogMs, "triad-approach", StuckDetector.MoveStallAbort("triad-approach"));
         if (approach.Fault is { } fault)
         {

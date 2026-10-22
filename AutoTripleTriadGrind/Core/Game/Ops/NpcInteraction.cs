@@ -1,3 +1,4 @@
+using clib.Extensions;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
@@ -7,6 +8,7 @@ using ECommons.GameFunctions;
 using ECommons.Throttlers;
 using ECommons.UIHelpers.AddonMasterImplementations;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
+using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System.Numerics;
 using System.Text;
@@ -27,6 +29,9 @@ internal static unsafe class NpcInteraction
     private const string TalkThrottleKey = "ATTG.Npc.Talk";
     private const string CallbackThrottleKey = "ATTG.Npc.Callback";
     private const string CloseThrottleKey = "ATTG.Npc.Close";
+    // Eye level of a standing character, so a counter or a railing between the two is seen over.
+    private const float EyeHeightMeters = 1.7f;
+    private const float MinSightLineMeters = 0.1f;
 
     private static readonly BlockingFlag[] blockingFlags =
     [
@@ -114,6 +119,23 @@ internal static unsafe class NpcInteraction
         }
 
         return nearest;
+    }
+
+    // The game's own talking range plus a clear line at eye level. Interact skips the game's line-of-sight check, so
+    // range alone could stop a walk on the far side of a wall.
+    public static bool CanTalkTo(IGameObject npc)
+    {
+        if (Svc.Objects.LocalPlayer is not { } player || !npc.IsInInteractRange())
+        {
+            return false;
+        }
+
+        var playerPosition = player.Position;
+        var npcPosition = npc.Position;
+        var eye = new Vector3(playerPosition.X, playerPosition.Y + EyeHeightMeters, playerPosition.Z);
+        var sightLine = new Vector3(npcPosition.X, npcPosition.Y + EyeHeightMeters, npcPosition.Z) - eye;
+        var length = sightLine.Length();
+        return length <= MinSightLineMeters || !BGCollisionModule.RaycastMaterialFilter(eye, sightLine / length, out _, length);
     }
 
     public static bool IsTargeted(IGameObject gameObject)
