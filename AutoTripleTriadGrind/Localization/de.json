@@ -239,6 +239,7 @@
   "changelog.new": "Neu",
   "changelog.changes.one": "{0} Änderung",
   "changelog.changes.other": "{0} Änderungen",
+  "changelog.r1310.1": "Behoben: Der Weg zu einem NPC hinter einer Theke, etwa Momodi, lief bei jedem Versuch gegen die Theke; der Charakter bleibt jetzt vor der Theke stehen, sobald der NPC in Gesprächsreichweite ist",
   "changelog.r1300.1": "Chat-Befehle in den Einstellungen hinzugefügt: Trage eigene Befehle ein, einen pro Zeile (etwa /li home oder /ays m); sie laufen, wenn ein Lauf von selbst endet, vor der Aktion nach dem Lauf, und nie nach Stopp oder einem Fehler",
   "changelog.r1300.2": "Behoben: Das Deck wurde am Tisch noch einmal gebaut, obwohl es schon auf dem Weg zum NPC gebaut war; jetzt wird pro NPC nur einmal ein Deck gebaut",
   "changelog.r1300.3": "Behoben: Der Lauf hing, wenn ein NPC statt der Herausforderung eine Quest anbot; das Angebot wird jetzt abgelehnt und der NPC als „Quest im Weg“ übersprungen",

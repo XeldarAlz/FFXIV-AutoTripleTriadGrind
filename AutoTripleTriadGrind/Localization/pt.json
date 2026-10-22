@@ -239,6 +239,7 @@
   "changelog.new": "Novo",
   "changelog.changes.one": "{0} mudança",
   "changelog.changes.other": "{0} mudanças",
+  "changelog.r1310.1": "Corrigida a aproximação de um NPC atrás de um balcão, como Momodi, que corria contra o balcão a cada tentativa: agora o personagem para em frente ao balcão assim que o NPC está ao alcance para conversar",
   "changelog.r1300.1": "Adicionados Comandos de chat às configurações: liste seus próprios comandos, um por linha (como /li home ou /ays m), e eles rodam quando uma sessão termina sozinha, antes da ação final, nunca depois de Parar ou de uma falha",
   "changelog.r1300.2": "Corrigido o deck ser montado de novo na mesa depois de já ter sido montado a caminho do NPC: agora cada NPC tem uma única montagem de deck",
   "changelog.r1300.3": "Corrigida a sessão travada quando um NPC oferece uma missão em vez do desafio: a oferta é recusada e o NPC é pulado como Bloqueado por uma missão",

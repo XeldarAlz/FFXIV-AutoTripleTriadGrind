@@ -265,6 +265,11 @@ internal static partial class L
         public static readonly LocString New = new("changelog.new", "New");
         public static readonly LocPlural Changes = new("changelog.changes", "{0} change", "{0} changes");
 
+        public static readonly LocString[] Release1310 =
+        [
+            new("changelog.r1310.1", "Fixed the walk up to an NPC behind a counter, such as Momodi, running into the counter on every try: it now stops in front of the counter once the NPC is in talking range"),
+        ];
+
         public static readonly LocString[] Release1300 =
         [
             new("changelog.r1300.1", "Added Chat commands to the settings: list your own commands, one per line (such as /li home or /ays m), and they run when a run finishes on its own, before the after-run action, never after Stop or a failure"),

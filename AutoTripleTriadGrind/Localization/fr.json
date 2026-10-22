@@ -239,6 +239,7 @@
   "changelog.new": "Nouveau",
   "changelog.changes.one": "{0} changement",
   "changelog.changes.other": "{0} changements",
+  "changelog.r1310.1": "Correction de l'approche d'un PNJ derrière un comptoir, comme Momodi, qui fonçait dans le comptoir à chaque essai : le personnage s'arrête désormais devant le comptoir dès que le PNJ est à portée de dialogue",
   "changelog.r1300.1": "Ajout de Commandes de chat dans les réglages : listez vos propres commandes, une par ligne (comme /li home ou /ays m), elles se lancent quand une session se termine d'elle-même, avant l'action de fin, jamais après Arrêt ou un échec",
   "changelog.r1300.2": "Correction du deck reconstruit à la table alors qu'il avait déjà été construit en chemin vers le PNJ : chaque PNJ n'a désormais qu'une seule construction de deck",
   "changelog.r1300.3": "Correction d'une session bloquée quand un PNJ propose une quête au lieu du défi : l'offre est refusée et le PNJ est ignoré comme Bloqué par une quête",

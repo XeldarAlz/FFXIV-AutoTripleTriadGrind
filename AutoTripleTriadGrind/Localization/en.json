@@ -239,6 +239,7 @@
   "changelog.new": "New",
   "changelog.changes.one": "{0} change",
   "changelog.changes.other": "{0} changes",
+  "changelog.r1310.1": "Fixed the walk up to an NPC behind a counter, such as Momodi, running into the counter on every try: it now stops in front of the counter once the NPC is in talking range",
   "changelog.r1300.1": "Added Chat commands to the settings: list your own commands, one per line (such as /li home or /ays m), and they run when a run finishes on its own, before the after-run action, never after Stop or a failure",
   "changelog.r1300.2": "Fixed the deck being built again at the table after it was already built on the way to the NPC: each NPC now gets one deck build",
   "changelog.r1300.3": "Fixed the run hanging when an NPC offers a quest instead of the challenge: the offer is declined and the NPC is skipped as Quest in the way",

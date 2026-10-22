@@ -239,6 +239,7 @@
   "changelog.new": "Nuevo",
   "changelog.changes.one": "{0} cambio",
   "changelog.changes.other": "{0} cambios",
+  "changelog.r1310.1": "Corregido que, al acercarse a un PNJ detrás de un mostrador, como Momodi, el personaje chocara contra el mostrador en cada intento: ahora se detiene delante del mostrador en cuanto el PNJ está a distancia para hablar",
   "changelog.r1300.1": "Se añadieron Comandos de chat a los ajustes: escribe tus propios comandos, uno por línea (como /li home o /ays m), y se ejecutan cuando una sesión termina por sí sola, antes de la acción final, nunca tras Detener o un fallo",
   "changelog.r1300.2": "Corregido que el mazo se volviera a construir en la mesa después de haberlo construido de camino al NPC: ahora cada NPC tiene una sola construcción de mazo",
   "changelog.r1300.3": "Corregido que la sesión se quedara bloqueada cuando un NPC ofrece una misión en lugar del desafío: ahora se rechaza la oferta y el NPC se omite como Bloqueado por una misión",

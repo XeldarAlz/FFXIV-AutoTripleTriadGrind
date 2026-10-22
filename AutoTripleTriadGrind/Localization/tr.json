@@ -239,6 +239,7 @@
   "changelog.new": "Yeni",
   "changelog.changes.one": "{0} değişiklik",
   "changelog.changes.other": "{0} değişiklik",
+  "changelog.r1310.1": "Düzeltildi: Momodi gibi bir tezgâhın arkasındaki NPC'ye yaklaşırken karakter her denemede tezgâha çarpıyordu; artık NPC konuşma mesafesine girer girmez tezgâhın önünde duruyor",
   "changelog.r1300.1": "Ayarlara Sohbet komutları eklendi: kendi komutlarınızı her satıra bir tane yazın (örneğin /li home veya /ays m); bir çalışma kendiliğinden bittiğinde, bitiş eyleminden önce çalışırlar, Durdur'dan veya bir hatadan sonra asla çalışmazlar",
   "changelog.r1300.2": "NPC'ye giderken kurulan destenin masada yeniden kurulması düzeltildi: artık her NPC için deste bir kez kuruluyor",
   "changelog.r1300.3": "Bir NPC meydan okuma yerine görev önerdiğinde çalışmanın takılması düzeltildi: teklif reddediliyor ve NPC Görev engelliyor olarak atlanıyor",
